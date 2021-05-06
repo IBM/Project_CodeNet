@@ -1,0 +1,23 @@
+{
+  "graph": {
+    "version": "1.0",
+    "directed": true,
+    "nodes": [
+      { "id": "Node1",
+        "edges": [ { "on": "Node1", "label": "Edge1" },
+                   { "on": "Node2", "label": "Edge2" },
+                   { "on": "Node3", "label": "Edge3" } ]
+      },
+      { "id": "Node2",
+        "edges": [ { "on": "Node4", "label": "Edge4" } ]
+      },
+      { "id": "Node3",
+        "edges": [ { "on": "Node4", "label": "Edge5" } ]
+      },
+      { "id": "Node4",
+        "edges": [ { "on": "Node3", "label": "Edge6" },
+                   { "on": "Node1", "label": "Edge7" } ]
+      }
+    ]
+  }
+}

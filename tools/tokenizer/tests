@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# Copyright IBM Corporation 2020
+# Prepared by Geert Janssen <geert@us.ibm.com>
+
+# Utilities required: csvkit, jq, xmllint, yajsv, jing
+
+# Prepare some test files:
+./tokenize -mplain -o test1.txt   tokenize.c
+./tokenize -mcsv   -o test1.csv   tokenize.c
+./tokenize -mjson  -o test1.json  tokenize.c
+./tokenize -mjsonl -o test1.jsonl tokenize.c
+./tokenize -mxml   -o test1.xml   tokenize.c
+
+# Quick syntax check:
+echo "syntax checking test1.csv:"
+# -v	verbose
+# -n	dry-run, no output
+# -d','	delimiter character
+# -q'"'	quote strings character
+# -u0	quoting style: quote minimal
+# -b	double quotes are doubled
+csvclean -v -n -d',' -q'"' -u0 -b  test1.csv
+echo "syntax checking test1.json:"
+jq empty test1.json
+echo "syntax checking test1.xml:"
+xmllint --noout test1.xml
+
+# Validation against schema:
+#echo "validating test1.csv:"
+echo "validating test1.json:"
+yajsv -s schemas/schema.json test1.json
+echo "validating test1.jsonl:"
+jq -n '[inputs]'  test1.jsonl | yajsv -s schemas/schema.json /dev/stdin
+echo "validating test1.xml:"
+jing -c schemas/schema.rnc test1.xml
+[ $? == "0" ] && echo "test1.xml: pass"
+# Count class instances:
+echo "class instances:"
+csvcut -c 3 test1.csv | tail -n +2 | sort | uniq -c
+
+# Convert CDATA to entity escapes:
+#xmllint --nocdata t1.xml
+
+# Re-indent:
+#xmllint --format
+#Nicer:
+#tidy -xml -i -q

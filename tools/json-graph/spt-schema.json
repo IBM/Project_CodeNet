@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "JSON Schema for SPT in IBM AI4Code GraphJSON Format",
+  "description": "Prepared by Geert Janssen <geert@us.ibm.com>\nCopyright IBM Corporation 2021.",
+
+  "type": "object",
+  "properties": {
+    "graph": { "$ref": "#/definitions/graph" }
+  },
+  "required": [ "graph" ],
+  "additionalProperties": false,
+
+  "definitions": {
+    "graph": {
+      "type": "object",
+      "properties": {
+        "version" : { "enum": [ "1.0" ] },
+        "type":     { "enum": [ "tree" ] },
+        "directed": { "enum": [ true ] },
+        "label":    { "type": "string" },
+        "root":     { "enum": [ 0 ] },
+        "order":    { "enum": [ "bfs" ] },
+
+        "nodes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/node" }
+        },
+        "edges": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/edge" }
+        }
+      },
+      "required": [ "version", "type", "directed",
+                    "root", "order", "nodes", "edges" ],
+      "additionalProperties": false
+    },
+
+    "node": {
+      "type": "object",
+      "properties": {
+        "id":       { "$ref": "#/definitions/unsigned" },
+        "label":    { "type": "string" },
+	"node-type": { "type": "string" },
+	"type-rule-name": { "type": "string" },
+	"token_id": { "$ref": "#/definitions/unsigned" },
+	"line":     { "$ref": "#/definitions/unsigned" }
+      },
+      "required": [ "id", "label", "node-type", "type-rule-name" ],
+      "additionalProperties": false
+    },
+
+    "edge": {
+      "description": "Edge object in an edge list.",
+      "type": "object",
+      "properties": {
+        "id":    { "$ref": "#/definitions/unsigned_or_string" },
+        "label": { "type": "string" },
+        "between": {
+          "description": "An ordered pair of 2 node ids.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/unsigned" },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      },
+      "required": [ "between" ],
+      "additionalProperties": false
+    },
+
+    "unsigned": {
+      "description" : "A non-negative integer.",
+      "type": "integer", "minimum": 0
+    },
+
+    "unsigned_or_string": {
+      "description" : "A non-negative integer or a string.",
+      "oneOf": [
+        { "type": "integer", "minimum": 0 },
+        { "type": "string" }
+      ]
+    }
+  }
+}

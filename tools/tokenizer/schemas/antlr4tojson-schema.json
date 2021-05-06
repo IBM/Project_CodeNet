@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "JSON Schema for processed ANTLR4 -tokens output",
+  "description": "Prepared by Geert Janssen <geert@us.ibm.com>\nCopyright IBM Corporation 2020.",
+
+  "type": "array",
+  "items": { "$ref": "#/definitions/token" },
+
+  "definitions": {
+    "token": {
+      "type": "object",
+      "properties": {
+	"seqnr":   { "$ref": "#/definitions/nonneg_int" },
+	"start":   { "$ref": "#/definitions/nonneg_int" },
+	"stop":    { "$ref": "#/definitions/nonneg_int" },
+	"text":    { "$ref": "#/definitions/text" },
+	"class":   { "$ref": "#/definitions/class" },
+	"channel": { "$ref": "#/definitions/pos_int" },
+	"line":    { "$ref": "#/definitions/pos_int" },
+	"column":  { "$ref": "#/definitions/nonneg_int" }
+      },
+      "additionalProperties": false,
+      "required": [ "seqnr", "start", "stop", "text", "class", "line", "column" ]
+    },
+    "text":   { "type": "string" },
+    "ident":  { "type": "string", "pattern": "^[A-Z][a-zA-Z_0-9]*$" },
+    "string": { "type": "string", "pattern": "^'.*'$" },
+    "class": {
+      "oneOf": [
+        { "$ref": "#/definitions/ident" },
+        { "$ref": "#/definitions/string" },
+        { "$ref": "#/definitions/nonneg_int" }
+      ]
+    },
+    "pos_int": { "type": "integer", "minimum": 1 },
+    "nonneg_int": { "type": "integer", "minimum": 0 }
+  }
+}

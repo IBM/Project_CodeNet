@@ -1,0 +1,13 @@
+seqnr,start,stop,text,class,channel,line,column
+0,1,25,/* Hello World program */,blockcomment,1,2,0
+1,28,31,main,identifier,0,4,0
+2,32,32,(,punctuator,0,4,4
+3,33,33,),punctuator,0,4,5
+4,35,35,{,punctuator,0,5,0
+5,41,46,printf,identifier,0,6,4
+6,47,47,(,punctuator,0,6,10
+7,48,60,"""Hello World""",stringliteral,0,6,11
+8,61,61,),punctuator,0,6,24
+9,62,62,;,punctuator,0,6,25
+10,65,65,},punctuator,0,8,0
+11,68,67,<EOF>,eof,0,10,0

@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "JSON Schema for Aroma",
+  "description": "Prepared by Geert Janssen <geert@us.ibm.com>\nCopyright IBM Corporation 2020.",
+
+  "type": "object",
+  "properties": {
+    "path":      { "description": "the name of the source file",
+                   "type": "string" },
+    "beginline": { "description": "start line number of method/function",
+                   "type": "integer" },
+    "endline":   { "description": "end line number of method/function",
+                   "type": "integer" },
+    "method":    { "description": "the name of the method/function",
+                   "type": "string" },
+    "class":     { "description": "the class of the method",
+                   "type": "string" },
+    "ast":       { "description": "the syntax tree of the method body",
+                   "$ref": "#/definitions/tree" }
+  },
+  "required": [ "path", "ast" ],
+  "additionalProperties": false,
+
+  "definitions": {
+    "data": {
+      "description": "an object with data for a leaf node",
+      "type": "object",
+      "properties": {
+        "leaf":     { "description": "is this a leaf node?",
+                      "type": "boolean", "default": false },
+        "var":      { "description": "is this a variable (leaf) node?",
+                      "type": "boolean", "default": false },
+        "leading":  { "description": "white-space before this construct",
+                      "type": "string" },
+        "trailing": { "description": "white-space after this construct",
+                      "type": "string" },
+        "line":     { "description": "the line number of this token",
+                      "type": "integer" },
+        "token":    { "description": "the literal token text",
+                      "type": "string" }
+      },
+      "required": [ "token" ],
+      "additionalProperties": false
+    },
+    "tree": {
+      "description": "an array of subtrees",
+      "type": "array",
+      "items": {
+        "description": "child subtrees in left-to-right order",
+        "oneOf": [
+          { "description": "the encoded syntax construct (must be first)",
+            "type": "string" },
+          { "description": "an object for a token",
+            "$ref": "#/definitions/data" },
+          { "description": "an array for a non-terminal construct",
+            "$ref": "#/definitions/tree" }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "graph": {
+    "version": "1.0",
+    "type": "tree",
+    "directed": true,
+    "root": 0,
+    "nodes": [
+      { "id": 0, "label": "Top",    "edges": [ 1, 2 ] },
+      { "id": 1, "label": "Child1" },
+      { "id": 2, "label": "Child2", "edges": [ 3 ] },
+      { "id": 3, "label": "Grandchild" }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+AMPCHAR : '&';
+ASTERISKCHAR : '*';
+DOUBLEASTERISKCHAR : '**';
+COLONCHAR : ':';
+COMMACHAR : ',';
+COMMENTENTRYTAG : '*>CE';
+COMMENTTAG : '*>';
+DOLLARCHAR : '$';
+DOUBLEQUOTE : '"';
+// period full stop
+DOT_FS : '.' ('\r' | '\n' | '\f' | '\t' | ' ')+ | '.' EOF;
+DOT : '.';
+EQUALCHAR : '=';
+EXECCICSTAG : '*>EXECCICS';
+EXECSQLTAG : '*>EXECSQL';
+EXECSQLIMSTAG : '*>EXECSQLIMS';
+LESSTHANCHAR : '<';
+LESSTHANOREQUAL : '<=';
+LPARENCHAR : '(';
+MINUSCHAR : '-';
+MORETHANCHAR : '>';
+MORETHANOREQUAL : '>=';
+NOTEQUALCHAR : '<>';
+PLUSCHAR : '+';
+SINGLEQUOTE : '\'';
+RPARENCHAR : ')';
+SLASHCHAR : '/';

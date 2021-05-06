@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Alternate JSON Schema for IBM AI4Code GraphJSON Format",
+  "description": "Prepared by Geert Janssen <geert@us.ibm.com>\nCopyright IBM Corporation 2020.",
+
+  "type": "object",
+  "properties": {
+    "graph": { "$ref": "#/definitions/graph" }
+  },
+  "required": [ "graph" ],
+  "additionalProperties": true,
+
+  "definitions": {
+    "graph": {
+      "type": "object",
+      "properties": {
+        "version" : { "enum": [ "1.0" ] },
+        "type":     {
+          "description": "Indication of type, e.g. tree or dag.",
+          "type": "string"
+        },
+        "directed": { "type": "boolean" },
+        "label":    { "type": "string" },
+        "root":  {
+          "description": "Indication of the root node for a tree (or dag?).",
+          "$ref": "#/definitions/unsigned_or_string"
+        },
+        "order": { "enum": [ "none", "topological", "reverse-topological",
+                             "dfs", "bfs" ] },
+        "metadata": { "type": "object" },
+
+        "nodes": {
+          "description": "Mandatory node list.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/node" }
+        },
+        "edges": {
+          "description": "Optional edge list.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/edge" }
+        }
+      },
+      "required": [ "version", "directed", "nodes" ],
+      "additionalProperties": true
+    },
+
+    "node": {
+      "type": "object",
+      "properties": {
+        "id":    { "$ref": "#/definitions/unsigned_or_string" },
+        "label": { "type": "string" },
+        "edges": {
+          "description": "Optional adjacency-style notation.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/adjacency_edge" }
+        },
+        "metadata": { "type": "object" }
+      },
+      "required": [ "id" ],
+      "additionalProperties": true
+    },
+
+    "edge": {
+      "description": "Edge object in an edge list.",
+      "type": "object",
+      "properties": {
+        "id":    { "$ref": "#/definitions/unsigned_or_string" },
+        "label": { "type": "string" },
+        "between": {
+          "description": "An ordered pair of 2 nodes.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/unsigned_or_string" },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "metadata": { "type": "object" }
+      },
+      "required": [ "between" ],
+      "additionalProperties": true
+    },
+
+    "adjacency_edge": {
+      "description": "Edge in a node adjacency list.",
+      "oneOf": [
+        { "description": "An array of node ids.",
+          "$ref": "#/definitions/unsigned_or_string"
+        },
+        {
+          "description": "An array of edge objects.",
+          "type": "object",
+          "properties": {
+            "id":    { "$ref": "#/definitions/unsigned_or_string" },
+            "label": { "type": "string" },
+            "on":    { "$ref": "#/definitions/unsigned_or_string" },
+            "metadata": { "type": "object" }
+          },
+          "required": [ "on" ],
+          "additionalProperties": true
+        }
+      ]
+    },
+
+    "unsigned_or_string": {
+      "description" : "A non-negative integer or a string.",
+      "oneOf": [
+        { "type": "integer", "minimum": 0 },
+        { "type": "string" }
+      ]
+    }
+  }
+}

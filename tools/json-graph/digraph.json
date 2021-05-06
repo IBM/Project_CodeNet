@@ -1,0 +1,21 @@
+{
+  "graph": {
+    "version": "1.0",
+    "directed": true,
+    "nodes": [
+      { "id": "Node1" },
+      { "id": "Node2" },
+      { "id": "Node3" },
+      { "id": "Node4" }
+    ],
+    "edges": [
+      { "between": [ "Node1", "Node1" ], "label": "Edge1" },
+      { "between": [ "Node1", "Node2" ], "label": "Edge2" },
+      { "between": [ "Node1", "Node3" ], "label": "Edge3" },
+      { "between": [ "Node2", "Node4" ], "label": "Edge4" },
+      { "between": [ "Node3", "Node4" ], "label": "Edge5" },
+      { "between": [ "Node4", "Node3" ], "label": "Edge6" },
+      { "between": [ "Node4", "Node1" ], "label": "Edge7" }
+    ]
+  }
+}

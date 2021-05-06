@@ -1,0 +1,24 @@
+# Compact RELAX NG (RNC) Schema for Tokenizer XML Output
+# Copyright IBM Corporation 2020
+# Prepared by Geert Janssen <geert@us.ibm.com>
+
+datatypes xsd = 'http://www.w3.org/2001/XMLSchema-datatypes'
+
+start = doc
+
+doc =
+   element tokens {
+      \token*
+   }
+
+\token =
+   element token {
+      attribute line   { xsd:unsignedInt },
+      attribute column { xsd:unsignedInt },
+      attribute class  { token-classes },
+      text
+   }
+
+token-classes =
+   "identifier" | "keyword" | "integer" | "floating" | "string" |
+   "character" | "operator" | "preprocessor" | "filename"

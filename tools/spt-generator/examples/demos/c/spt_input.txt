@@ -1,0 +1,3 @@
+./examples/c/helloworld.c /tmp
+./examples/c/fib.c /tmp
+./examples/c/gauss.c /tmp
