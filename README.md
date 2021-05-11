@@ -55,7 +55,7 @@ To facilitate creation of customized benchmarks and dataset, we provide a set of
 
 ## Download the dataset
 
-Download the full dataset [here](https://ibmdev1.rtp.raleigh.ibm.com/exchanges/data/all/project-codenet/).
+Download the full dataset [here](https://developer.ibm.com/exchanges/data/all/project-codenet/).
 `tar -zxf Project_CodeNet_full.tar.gz`
 to uncompress and untar. The directory structure and how the code samples are organized are explained [here](README.md#directory-structure-and-naming-convention).
 
