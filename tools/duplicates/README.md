@@ -23,7 +23,7 @@ might insist on correctly handling the original tokens.
 The list of tokens is never empty. The token list can thus easily be split using the separator character
 as delimiter. (Note that all comments are assumed to have been removed.)
 
-In the sebsequent examples the Project CodeNet dataset is
+In the subsequent examples the Project CodeNet dataset is
 under the /Volume1/AI4CODE directory, which will be different for another user.
 As an example, here are the first 3 samples of tokenized C/C++ source code files:
 

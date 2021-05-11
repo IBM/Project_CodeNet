@@ -39,19 +39,21 @@ This brief guide is in no way a substitute for the excellent and
 extensive [documentation](http://hsqldb.org/web/hsqlDocsFrame.html)
 and [howtos](http://hsqldb.org/web/howto.html) that accompany HSQLDB.
 
-We assume the use of (the latest as of writing) version 2.5.1 of HSQLDB.
+We assume the use of (the latest as of writing) version 2.6.0 of HSQLDB.
 (Any future newer version will probably work just as well).
 
 The required software can be downloaded from
-<http://www.hsqldb.org/download/hsqldb_snapshot_6178/>.
-That website offers the 2 files `hsqldb.jar` and `sqltool.jar`.
+<http://www.hsqldb.org/download/hsqldb_260_jdk8/>.
+That website offers the 2 files `hsqldb-2.6.0-jdk8.jar` and
+`sqltool-2.6.0-jdk8.jar`. Rename the files to
+`hsqldb.jar` and `sqltool.jar`, respectively.
 
 Important files and their use are:
 
 >`hsqldb.jar`
 : The jar file containing all classes of the database engine proper.
 Typically resides in some system accessible directory, like:
-`$PREFIX/lib/hsqldb-2.5.1/hsqldb/lib/`
+`$PREFIX/lib/hsqldb-2.6.0/hsqldb/lib/`
 
 >`sqltool.jar`
 : The jar file that provides an interactive command-line user interface (CLI)
@@ -64,7 +66,7 @@ Its contents could be something like:
 ```bash
 #!/usr/bin/env bash
 
-HSQLDB_HOME=$PREFIX/lib/hsqldb-2.5.1/hsqldb
+HSQLDB_HOME=$PREFIX/lib/hsqldb-2.6.0/hsqldb
 
 # allow csv to reside anywhere (and not just inside db directory)
 java -Dtextdb.allow_full_path=false -jar $HSQLDB_HOME/lib/sqltool.jar "$@"

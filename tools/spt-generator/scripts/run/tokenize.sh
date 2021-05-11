@@ -25,7 +25,7 @@ case $i in
     echo -e "  -h|--help:\t show this brief usage summary"
 
     echo
-    echo "When -b option is set, the input_file contains a list of <src_file dest_dir>, no other opitions should be set."
+    echo "When -b option is set, the input_file contains a list of <src_file dest_dir>, no other options should be set."
     echo
     echo "When -b option is not set, the input_file is the source code to be analyzed."
     echo "When -d option is set, dir is the directory where the token file (.csv) outputs to. When -d option is not set, tokens will be written to stdout."
@@ -54,11 +54,11 @@ if [[ $DEST == 1 ]]; then
 	# Check for existence of output directory:
 	[ -d "${OUTPUT_DIR}" ] || die "Expect output directory ${OUTPUT_DIR}"
 	# single file output to output_dir
-	java -cp ${external_jar_path}:${AI4CODE_HOME}/targets/ibm-ai4code-v0.1.jar com.ibm.ai4code.parser.Tokenizer \
+	java -cp ${external_jar_path}:${AI4CODE_HOME}/targets/ibm-ai4code-v0.1.jar com.ibm.ai4code.parser.Tokenizer --multi \
 	-d ${OUTPUT_DIR} $INPUT_FILE  
 else
 	if [[ $BATCH == 1 ]]; then # batch processing
-		java -cp ${external_jar_path}:${AI4CODE_HOME}/targets/ibm-ai4code-v0.1.jar com.ibm.ai4code.parser.Tokenizer \
+		java -cp ${external_jar_path}:${AI4CODE_HOME}/targets/ibm-ai4code-v0.1.jar com.ibm.ai4code.parser.Tokenizer --multi \
 		$INPUT_FILE -b
 	else # single file output to stdout
 		java -cp ${external_jar_path}:${AI4CODE_HOME}/targets/ibm-ai4code-v0.1.jar com.ibm.ai4code.parser.Tokenizer --multi \

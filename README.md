@@ -11,7 +11,7 @@ The goal of Project CodeNet is to provide the *AI-for-Code* research community w
       * [Usability](#usability)
    * [Download the dataset](#download-the-dataset)
    * [Dataset overview](#dataset-overview)
-      * [Dataset statisitics](#dataset-statisitics)
+      * [Dataset statistics](#dataset-statistics)
    * [Data](#data)
    * [Metadata](#metadata)
       * [Metadata at the dataset level](#metadata-at-the-dataset-level)
@@ -21,21 +21,21 @@ The goal of Project CodeNet is to provide the *AI-for-Code* research community w
       * [Example of getting the source file for a particular submission](#example-of-getting-the-source-file-for-a-particular-submission)
       * [Example of getting the metadata for a particular source file](#example-of-getting-the-metadata-for-a-particular-source-file)
    * [Tools to process source files](#tools-to-process-source-files)
-      * [statistics](#statistics)
-      * [access and selection](#access-and-selection)
-      * [pre-processing](#pre-processing)
+      * [Statistics](#statistics)
+      * [Access and selection](#access-and-selection)
+      * [Pre-processing](#pre-processing)
 
 ## Introduction
 
-A decade ago, Marc Andreessen [famously wrote](https://a16z.com/2011/08/20/why-software-is-eating-the-world/) that "software is eating the world." Software now permeates every part of our existence; Google services combine for [2 billion lines of code](https://www.wired.com/2015/09/google-2-billion-lines-codeand-one-place/), and a modern vehicle [contains around](https://www.technologyreview.com/2012/12/03/181350/many-cars-have-a-hundred-million-lines-of-code/) 100 million lines of code. It's a monumental challenge to create, debug, maintain, and update these complex software systems. Recently, a fast-growing discipline known as AI for Code aims to help software developers improve their productivity by automating the software engineering process. AI for Code researchers have been leveraging technologies like NLP and augmenting them with code analysis and compilation techniques to perform a myriad of tasks, such as code search, summarization, and completion, as well as code-to-code translation. The discipline isn't limited to academic research, either: Ruchir Puri, IBM Research's chief research scientist, discussed in a recent [podcast](https://open.spotify.com/episode/7gHPbVBHEgSdrACTow7Gql) how technologies from AI for Code are being used to modernize legacy software by helping migrate monolithic applications to microservices for IBM's enterprise clients.
+A decade ago, Marc Andreessen [famously wrote](https://a16z.com/2011/08/20/why-software-is-eating-the-world/) that "software is eating the world." Software now permeates every part of our existence; Google services combine for [2 billion lines of code](https://www.wired.com/2015/09/google-2-billion-lines-codeand-one-place/), and a modern vehicle [contains around](https://www.technologyreview.com/2012/12/03/181350/many-cars-have-a-hundred-million-lines-of-code/) 100 million lines of code. It's a monumental challenge to create, debug, maintain, and update these complex software systems. Recently, a fast-growing discipline known as AI for Code aims to help software developers improve their productivity by automating the software engineering process. AI for Code researchers have been leveraging technologies like NLP and augmenting them with code analysis and compilation techniques to perform a myriad of practical tasks, such as code search, summarization, and completion, as well as code-to-code translation. The discipline isn't limited to academic research either: Ruchir Puri, IBM Research's chief research scientist, discussed in a recent [podcast](https://open.spotify.com/episode/7gHPbVBHEgSdrACTow7Gql) how technologies from AI for Code are being used to modernize legacy software by helping migrate monolithic applications to microservices for IBM's enterprise clients.
 
-AI for Code is poised to transition from proof-of-concept to widespread adoption. To provide a catalyst for such a tipping point, researchers at IBM Research have introduced Project CodeNet, a large-scale dataset for benchmarking and experimentation. Project CodeNet has many characteristics similar to ImageNet, a huge dataset for imagery that had a dramatic impact on the field of computer vision research. Project CodeNet is a large scale dataset with approximately 14 million code samples, each of which is an intended solution to one of 4000 coding problems. Project CodeNet aims to do for AI for Code what ImageNet did for computer vision.
+AI for Code is poised to transition from proof-of-concept to widespread adoption. To provide a catalyst for such a tipping point, researchers at IBM Research have introduced Project CodeNet, a large-scale dataset for benchmarking and experimentation. Project CodeNet has many characteristics (large scale, diveristy, etc.) similar to ImageNet, a huge dataset for imagery that had a dramatic impact on the field of computer vision research. Project CodeNet is a large scale dataset with approximately 14 million code samples, each of which is an intended solution to one of 4000 coding problems. Project CodeNet aims to do for AI for Code what ImageNet did for computer vision.
 
 ### Differentiation
 
-There are a few differentiating features of Project CodeNet when compared to other similar efforts. In addition to the size of the dataset, the code samples are written in over 50 programming languages, though the dominant languages are C++, C, Python, and Java. The code samples in Project CodeNet are annotated with a rich set of information, such as the code size, memory footprint, CPU run time, and status, which indicates acceptance or error types. Over 90% of the problems come with the respective problem description that contains a concise problem statement, specification of the input format and the output format. When available, we also extracted from the problem description sample input and output, and provide them as part of the dataset. Users can execute the accepted codes samples (over 50% of the submissions are accepted) to extract additional metadata, and verify outputs from generative AI models for correctness.
+There are a few differentiating features of Project CodeNet when compared to other similar efforts. In addition to the size of the dataset, the code samples are written in over 50 programming languages, though the dominant languages are C++, C, Python, and Java. The code samples in Project CodeNet are annotated with a rich set of information, such as the code size, memory footprint, CPU run time, and status, which indicates acceptance or error types. Over 90% of the problems come with the respective problem description, which contains a concise problem statement, specification of the input format and the output format. When available, we also extracted from the problem description sample input and output, and provide them as part of the dataset. Users can execute the accepted codes samples (over 50% of the submissions are accepted) to extract additional metadata and verify outputs from generative AI models for correctness.
 
-Another area that Project CodeNet addressed is the quality of the data samples. From a [paper](https://arxiv.org/pdf/1812.06469.pdf) by Allamanis, we learned that quite a number of frequently used AI for Code datasets have duplicate or near-duplicate code samples, and that can inflate performance metrics as much as 100%. In addition, we found that problem-submission style datasets from online judging systems can contain clusters of identical problems, which will certainly skew the performance metrics. One example is [POJ-104](https://sites.google.com/site/treebasedcnn/), in which problems 26 and 62 are identical. Therefore we identified the near-duplicates and the identical problem clusters in Project CodeNet and provide these information for the benefit of the users.
+Another area that Project CodeNet addressed is the quality of the data samples. From a [paper](https://arxiv.org/pdf/1812.06469.pdf) by Allamanis, we learned that quite a large number of frequently used AI for Code datasets have duplicate or near-duplicate code samples, which can inflate performance metrics as much as 100%. In addition, we found that problem-submission style datasets from online judging systems can contain clusters of identical problems, which will certainly skew the performance metrics. One example is [POJ-104](https://sites.google.com/site/treebasedcnn/), in which problems 26 and 62 are identical. Therefore we identified the near-duplicates and the identical problem clusters in Project CodeNet and provide these information for the benefit of the users.
 
 ### Benchmarks
 
@@ -47,7 +47,11 @@ The rich metadata and diversity open Project CodeNet to a plethora of uses cases
 
 ### Usability
 
-To facilitate creation of customized customized benchmarks and dataset, we provide a set of productivity tools to aggregate codes samples based on user criteria. We are also releasing pre-processing tools to transform code samples into [token sequences](tools/tokenizer), [simplified parse trees](tools/spt-generator) and other [code graphs](tools/analysis-graph-generator).
+To facilitate creation of customized benchmarks and dataset, we provide a set of productivity tools to aggregate codes samples based on user criteria. We are also releasing pre-processing tools to transform code samples into [token sequences](tools/tokenizer), [simplified parse trees](tools/spt-generator) and other [code graphs](tools/analysis-graph-generator).
+
+## Relevant link
+
+[Project CodeNet paper](./ProjectCodeNet_NeurIPS2021.pdf)
 
 ## Download the dataset
 
@@ -86,7 +90,7 @@ A detailed overview of the dataset statistics can be found in this [spreadsheet]
 
 The data consist of complete programs in a particular programming language. Each program is contained in a single file. The file will have a name with an extension that denotes the programming language used. (More details about the specific programming language and the version of the compiler/interpreter used, can be found in the metadata.)
 
-Each program is a solution to a certain programming task or problem. There will be many problems and each problem might have many solutions in different languages. Solutions do not necessarily have to be complete and correct. Solutions can also be attempts at solving a problem, but for various reasons as indicated by the metadata fail to do so. Therefore we prefer to talk about submissions and not solutions in the sequel. Solutions are the accepted submissions which consist of compilable and executable programs that at least correctly produce the expected results on all provided test cases. (Of course, according to the late Dijkstra, tests are no proof of correctness.)
+Each program attempts to solve a certain programming task or problem. There are many problems and each problem might have many solutions in different languages. We refer to each program as a submission instead of a solution since it might not be complete and correct.  Solutions are the accepted submissions that are compilable and executable, and at least correctly produce the expected results on all provided test cases. (Of course, according to the late Dijkstra, tests are no proof of correctness.)
 
 ## Metadata
 
@@ -111,7 +115,7 @@ name         | string | none | short name of the problem
 dataset      | string | none | original dataset, AIZU or AtCoder
 time_limit   | int    | millisecond | maximum time allowed for a submission
 memory_limit | int    | KB | maximum memory allowed for a submission
-rating       | int    | none | rating, i.e., difficulty, of the problem
+rating       | int    | none | rating, i.e., difficulty of the problem
 tags         | string | none | list of tags separated by "\|"; not used
 complexity   | string | none | degree of difficulty of the problem; not used
 
@@ -133,7 +137,7 @@ filename_ext  | string | none | extension of the filename that indicates the pro
 status        | string | none | acceptance status, or error type
 cpu_time      | int    | millisecond | execution time
 memory        | int    | KB | memory used
-code_size     | int    | Bytes | size of the submission source code in bytes
+code_size     | int    | bytes | size of the submission source code in bytes
 accuracy      | string | none | number of tests passed; *Only for AIZU
 
 Here is a table of all the possible status values. The “abbreviation” and “numeric code” are sometimes seen in the original metadata on the websites; it is listed here for reference and completeness. These fields do not occur in the Project CodeNet metadata.
@@ -216,21 +220,21 @@ To complement our large dataset of source code, a suite of tools and utilities w
 - preprocess the source files to extract certain information
 - facilitate conversions between popular formats
 
-### statistics
+### Statistics
 
 Since Project CodeNet uses the file system as storage and uses a rigorous directory structure, many (Linux) command-line utilities can be directly used to extract interesting statistics about the dataset. Utilities like `ls`, `wc` and `grep` are very useful. The CSV metadata can best be browsed using `[csvkit](https://csvkit.readthedocs.io/en/latest/)` components like `csvstat`.
 
 More elaborate statistics about the dataset can easily be retrieved using SQL queries on a database representation of the metadata. [HSQLDB](http://hsqldb.org/) is a database that runs off a CSV file. Our CSV problem metadata files are simply stripped of their headers and concatenated. A suite of useful SQL queries is available. A separate [document](doc/HSQLDB.md) explains the necessary steps.
 
-### access and selection
+### Access and selection
 
-As described above, it should be easy to create specific subsets of the dataset merely by copying (or symlinking) relevant files and/or directories. For more elaborate selections based on a subset or range of problems, a subset of languages, statuses, and code sizes, several Bash scripts are available to accomplish that. These scripts reside in the `scripts` directory and are separately documented in their own [README](scripts/README.md).
+As described above, it should be easy to create specific subsets of the dataset merely by copying (or symlinking) relevant files and/or directories. For more elaborate selections based on a subset or range of problems, a subset of languages, statuses, and code sizes, several Bash scripts are available to accomplish that. These scripts reside in the `tools/aggregation-scripts` directory and are separately documented in [README](tools/aggregation-scripts/README.md).
 
-### pre-processing
+### Pre-processing
 
-We provide tools to convert code samples into a represenation that can be consumed by AI algorithms
-  - generate stream of tokens [tokenizer]()
-  - parsing to tree/abstract syntax tree [AST generation]() 
-  - control and data flow graph construction [code analysis]() 
+We provide tools to convert code samples into a representation that can be consumed by AI algorithms
+  - generate stream of tokens [tokenizer](tools/tokenizer)
+  - parsing to tree/abstract syntax tree [AST generation](tools/spt-generator) 
+  - control and data flow graph construction [code analysis](tools/analysis-graph-generator) 
 
 Whether and to what extent the above steps can successfully be applied to any given source file depends on several factors. Obviously, if the submission is not of `Accepted` status, it is to be expected that even simple tokenization will fail because of malformed lexical elements. But the situation for `Accepted` submissions is not always better: programmers might have used certain non-standard features of the language that happen to be accepted by a certain compiler or interpreter. Simple cases are the use of a dollar sign as part of a C identifier. For languages like C and C++ that use a pre-processor, use of macros and conditional defines can hugely change how the code ultimately looks like.

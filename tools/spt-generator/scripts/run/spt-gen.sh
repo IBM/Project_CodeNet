@@ -26,7 +26,7 @@ case $i in
     echo -e "  -h|--help:\t show this brief usage summary"
 
     echo
-    echo "When -b option is set, the input_file contains a list of <src_file dest_dir>, no other opitions should be set."
+    echo "When -b option is set, the input_file contains a list of <src_file dest_dir>, no other options should be set."
     echo
     echo "When -b option is not set, -d option must be set, which is the directory where the SPT and tokens write to."
     echo "input_file is the source code to be analyzed."
@@ -66,7 +66,7 @@ if [[ $BATCH == 1 ]]; then # batch processing
 	fi
 else
 	[[ $DEST != 1 ]] && \
-		die "Single file processing must specifies an output directory"
+		die "Single file processing must specify an output directory"
 	[ -d "${OUTPUT_DIR}" ] ||  die "Expect output directory ${OUTPUT_DIR}"
 	if [[ $COMBINE == 0 ]]; then # use -multi to split tokens
 		java -cp ${external_jar_path}:${AI4CODE_HOME}/targets/ibm-ai4code-v0.1.jar com.ibm.ai4code.parser.SPTGenerator \

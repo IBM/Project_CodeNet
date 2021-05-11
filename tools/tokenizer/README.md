@@ -39,7 +39,7 @@ For instance the appearance of a line continuation inside a string literal:
 to stretch over two lines."
 ```
 
-upon output as a token becomes;
+upon output as a token becomes:
 
 ```C
 	"A long string literal that is broken here to stretch over two lines."
