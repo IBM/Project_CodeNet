@@ -59,7 +59,7 @@ Download the full dataset [here](https://developer.ibm.com/exchanges/data/all/pr
 `tar -zxf Project_CodeNet_full.tar.gz`
 to uncompress and untar. The directory structure and how the code samples are organized are explained [here](README.md#directory-structure-and-naming-convention).
 
-The 4 benchmarks, Project_CodeNet_C++1000, Project_CodeNet_C++1400, Project_CodeNet_Python800, and Project_CodeNet_Java250 are included in the full dataset and are available separately [here](https://ibmdev1.rtp.raleigh.ibm.com/exchanges/data/all/project-codenet/). They can be used for code classification and code similarity research as a replacement of or in addition to the dataset [POJ-104](https://sites.google.com/site/treebasedcnn/).
+The 4 benchmarks, Project_CodeNet_C++1000, Project_CodeNet_C++1400, Project_CodeNet_Python800, and Project_CodeNet_Java250 are included in the full dataset and are available separately [here](https://developer.ibm.com/exchanges/data/all/project-codenet/). They can be used for code classification and code similarity research as a replacement of or in addition to the dataset [POJ-104](https://sites.google.com/site/treebasedcnn/).
 
 ## Dataset overview
 
