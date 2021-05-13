@@ -53,7 +53,7 @@ To facilitate creation of customized benchmarks and dataset, we provide a set of
 
 ## Models and experiments
 
-We have performed numerous experiments on the CodeNet dataset. Their run scripts and training scripts are available in the model-experiments directory.
+We have performed numerous experiments on the CodeNet dataset. The goal of these experiments is to produce a set of baseline models and results for users of the CodeNet dataset to gauge their research. The run scripts and training scripts are available in the model-experiments directory.
 
 ## Relevant link
 
