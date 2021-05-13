@@ -51,7 +51,7 @@ To facilitate creation of customized benchmarks and dataset, we provide a set of
 
 ## Relevant link
 
-[Project CodeNet paper](./ProjectCodeNet_NeurIPS2021.pdf)
+[Project CodeNet paper](./ProjectCodeNet.pdf)
 
 ## Download the dataset
 
