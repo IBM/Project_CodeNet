@@ -145,7 +145,7 @@ line,column,class,token
 
 This output is then filtered by a simple AWK script (`filter5.awk`) to turn it
 into a stream of the above defined token classes. Here we will use `\` to
-indicate line continuations; these are no present in the actual output though.
+indicate line continuations; these are not present in the actual output though.
 
 ```console
 # include < id . id > # define id 123 static int id ( int id ) { if \
