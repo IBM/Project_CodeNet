@@ -147,6 +147,7 @@ static int continuous_files = 0;// when 1 do not reset after each file
 static enum { C, CPP, JAVA, PYTHON } source = CPP;
 
 // Use perfect hash function.
+#include "c_keywords.h"		// is_p_keyword()
 #include "cpp_keywords.h"	// is_cpp_keyword()
 #include "java_keywords.h"	// is_java_keyword()
 
@@ -991,7 +992,18 @@ fputs(
     num_files++;
 
     // Determine which keyword lookup function to use:
-    is_keyword = source == JAVA ? is_java_keyword : is_cpp_keyword;
+    switch (source) {
+	case JAVA:
+		is_keyword = is_java_keyword;
+		break;
+	case C:
+		is_keyword = is_c_keyword;
+		break;
+	case CPP: // fallthrough
+	default:
+		is_keyword = is_cpp_keyword;
+		break;
+    }
 
     // Header:
     switch (mode) {
