@@ -25,7 +25,7 @@ submissions in the file with blank line separated clusters use this command:
 $ grep -v '^$' clusters_file | wc -l
 ```
 
-In the sebsequent examples the Project CodeNet dataset is
+In the subsequent examples the Project CodeNet dataset is
 under the /Volume1/AI4CODE directory, which will be different for another user.
 We assume that the submissions are treated per problem and that the problems
 appear in sorted order. A snippet of a few clusters will make this clear:
@@ -162,7 +162,7 @@ specific data followed by a list of the problems that it relates to in terms
 of the cluster information.
 
 In particular we choose to output a problem per line, starting with the
-current problem id (like `p00000`) followed the number of submissions
+current problem id (like `p00000`) followed by the number of submissions
 and the number of singleton clusters. Next is a list of _connected_ (or
 neighboring) problems (the current problem itself among them) that are
 mentioned in the current problem clusters each with their cluster count and

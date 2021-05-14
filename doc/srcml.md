@@ -210,7 +210,7 @@ jtm -i2 tiny.xml > tiny.json
 
 ## Using srcML to extract a Function Call Graph
 
-A neat application of the combination of srcML and Xidel is to use
+A neat application of the combination of srcML and xmlstarlet is to use
 them in a script to produce the call graph of a program as a
 JSON-Graph.
 It is easy to extract the actual function
@@ -218,7 +218,7 @@ definitions, i.e., the source text, of all functions mentioned in the
 call graph.
 
 Here we briefly sketch the main steps. Details can be found in the
-actual Bash scripts provided in the `scripts` directory.
+actual Bash scripts provided in [this](../tools/aggregation-scripts) directory.
 
 1. We start with using srcML to get all function definitions from a
 source file: (This will ignore any pre-processor directives, any global
@@ -237,7 +237,7 @@ represent the function calls.
 
 Notice that the call graph can have cycles. These are caused by direct
 recursive or mutual recursive functions.
-Once we have the graph, traversing it in reverse depth-first-search
+Once we have the graph, traversing it in reverse depth-first
 order enumerates all function definitions in the proper
 define-before-use order and can hence be retrieved from the
 `source.xml` file, again using srcML to convert them back to source code.

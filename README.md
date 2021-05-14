@@ -9,6 +9,8 @@ The goal of Project CodeNet is to provide the *AI-for-Code* research community w
       * [Benchmarks](#benchmarks)
       * [Potential use cases](#potential-use-cases)
       * [Usability](#usability)
+   * [Models and experiments](#models-and-experiments)
+   * [Relevant link](#relevant-link)
    * [Download the dataset](#download-the-dataset)
    * [Dataset overview](#dataset-overview)
       * [Dataset statistics](#dataset-statistics)
@@ -49,17 +51,26 @@ The rich metadata and diversity open Project CodeNet to a plethora of uses cases
 
 To facilitate creation of customized benchmarks and dataset, we provide a set of productivity tools to aggregate codes samples based on user criteria. We are also releasing pre-processing tools to transform code samples into [token sequences](tools/tokenizer), [simplified parse trees](tools/spt-generator) and other [code graphs](tools/analysis-graph-generator).
 
+## Models and experiments
+
+We have performed numerous experiments on the CodeNet dataset. The goal of these experiments is to produce a set of baseline models and results for users of the CodeNet dataset to gauge their research. The run scripts and training scripts are available in the model-experiments directory.
+
 ## Relevant link
 
 [Project CodeNet paper](./ProjectCodeNet_NeurIPS2021.pdf)
 
 ## Download the dataset
 
-Download the full dataset [here](https://ibmdev1.rtp.raleigh.ibm.com/exchanges/data/all/project-codenet/).
+Download the full dataset
+[here](https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/).
+
 `tar -zxf Project_CodeNet_full.tar.gz`
 to uncompress and untar. The directory structure and how the code samples are organized are explained [here](README.md#directory-structure-and-naming-convention).
 
-The 4 benchmarks, Project_CodeNet_C++1000, Project_CodeNet_C++1400, Project_CodeNet_Python800, and Project_CodeNet_Java250 are included in the full dataset and are available separately [here](https://ibmdev1.rtp.raleigh.ibm.com/exchanges/data/all/project-codenet/). They can be used for code classification and code similarity research as a replacement of or in addition to the dataset [POJ-104](https://sites.google.com/site/treebasedcnn/).
+The 4 benchmarks, Project_CodeNet_C++1000, Project_CodeNet_C++1400,
+Project_CodeNet_Python800, and Project_CodeNet_Java250 are included in the
+full dataset and are available separately
+[here](https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/). They can be used for code classification and code similarity research as a replacement of or in addition to the dataset [POJ-104](https://sites.google.com/site/treebasedcnn/).
 
 ## Dataset overview
 
@@ -222,13 +233,18 @@ To complement our large dataset of source code, a suite of tools and utilities w
 
 ### Statistics
 
-Since Project CodeNet uses the file system as storage and uses a rigorous directory structure, many (Linux) command-line utilities can be directly used to extract interesting statistics about the dataset. Utilities like `ls`, `wc` and `grep` are very useful. The CSV metadata can best be browsed using `[csvkit](https://csvkit.readthedocs.io/en/latest/)` components like `csvstat`.
+Since Project CodeNet uses the file system as storage and uses a rigorous directory structure, many (Linux) command-line utilities can be directly used to extract interesting statistics about the dataset. Utilities like `ls`, `wc` and `grep` are very useful. The CSV metadata can best be browsed using [`csvkit`](https://csvkit.readthedocs.io/en/latest/) components like `csvstat`.
 
 More elaborate statistics about the dataset can easily be retrieved using SQL queries on a database representation of the metadata. [HSQLDB](http://hsqldb.org/) is a database that runs off a CSV file. Our CSV problem metadata files are simply stripped of their headers and concatenated. A suite of useful SQL queries is available. A separate [document](doc/HSQLDB.md) explains the necessary steps.
 
 ### Access and selection
 
-As described above, it should be easy to create specific subsets of the dataset merely by copying (or symlinking) relevant files and/or directories. For more elaborate selections based on a subset or range of problems, a subset of languages, statuses, and code sizes, several Bash scripts are available to accomplish that. These scripts reside in the `tools/aggregation-scripts` directory and are separately documented in [README](tools/aggregation-scripts/README.md).
+As described above, it should be easy to create specific subsets of the
+dataset merely by copying (or symlinking) relevant files and/or
+directories. For more elaborate selections based on a subset or range of
+problems, a subset of languages, statuses, and code sizes, several Bash
+scripts are available to accomplish that. These scripts reside in the
+`tools/aggregation-scripts` directory and are separately documented in this [README](tools/aggregation-scripts/README.md).
 
 ### Pre-processing
 
