@@ -390,8 +390,9 @@ int tokenize(char *token, const char **type, unsigned *line, unsigned *col)
     if (isalpha(cc) || cc == '_' || cc == '$' || cc & 0x80) {
       // First char always fits.
       token[len++] = cc;
-      while (isalnum(cc = get()) || cc == '_' || cc == '$' || cc & 0x80)
+      while ((isalnum(cc = get()) || cc == '_' || cc == '$' || cc & 0x80) && cc != EOF) {
         token_add(cc);
+	}
       unget(cc);
       *type = is_keyword(token, len) ? "keyword" : "identifier";
       break;
