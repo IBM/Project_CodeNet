@@ -837,7 +837,7 @@ int main(int argc, char *argv[])
   extern int opterr;
   extern int optind;
   int option;
-  char const *opt_str = "1cdhjl:m:no:rsvw";
+  char const *opt_str = "1cdhjl:m:no:rsvwa";
   char usage_str[80];
 
   char token[MAX_TOKEN+1];
@@ -849,6 +849,7 @@ int main(int argc, char *argv[])
   enum { PLAIN, CSV, JSON, JSONL, XML, RAW } mode = PLAIN;
   int first_time = 1;
   int explicit_source = 0;
+  int append = 0;
 
   sprintf(usage_str, "usage: %%s [ -%s ] [ FILES ]\n", opt_str);
 
@@ -887,7 +888,8 @@ fputs(
 "-s       : enable a special start token specifying the filename.\n"
 "-1       : treat all filename arguments as a continuous single input.\n"
 "-v       : print action summary to stderr.\n"
-"-w       : suppress all warning messages.\n",
+"-w       : suppress all warning messages.\n"
+"-a       : append to output file instead of overwriting.\n",
       stderr);
       return 0;
 
@@ -949,7 +951,9 @@ fputs(
     case 'w':
       nowarn = 1;
       break;
-
+    case 'a':
+      append = 1;
+      break;
     case '?':
     default:
       fputs("(F): unknown option. Stop.\n", stderr);
@@ -959,9 +963,17 @@ fputs(
   }
 
   if (outfile && outfile[0]) {
-    if (!freopen(outfile, "w", stdout)) {
+    if (append) {
+     if (!freopen(outfile, "a", stdout)) {
       fprintf(stderr, "(F): cannot open %s for writing.\n", outfile);
       exit(3);
+     }
+    } 
+    else {
+     if (!freopen(outfile, "w", stdout)) {
+      fprintf(stderr, "(F): cannot open %s for writing.\n", outfile);
+      exit(3);
+     }
     }
   }
 

@@ -83,6 +83,7 @@ Command line options are:
 -1       : treat all filename arguments as a continuous single input.
 -v       : print action summary to stderr.
 -w       : suppress all warning messages.
+-a       : append to output file instead of overwriting.
 ```
 
 The program reads multiple files. Depending on the `-1` option, the files
