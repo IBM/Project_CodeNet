@@ -258,4 +258,4 @@ Whether and to what extent the above steps can successfully be applied to any gi
 
 ### Contributors
 
-Ruchir Puri, David Kung, Geert Janssen
+Ruchir Puri, David Kung, Geert Janssen, Lindsey Decker
