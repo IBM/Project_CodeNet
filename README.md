@@ -258,4 +258,4 @@ Whether and to what extent the above steps can successfully be applied to any gi
 
 ### Contributors
 
-Ruchir Puri, David Kung, Geert Janssen, Vladimir Zolotov, Jie Chen, Mihir Choudhury, Lindsey Decker.
+Ruchir Puri, David Kung, Geert Janssen, Vladimir Zoloto, Jie Chen, Mihir Choudhury, Lindsey Decker.
