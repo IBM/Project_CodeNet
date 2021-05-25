@@ -254,3 +254,7 @@ We provide tools to convert code samples into a representation that can be consu
   - control and data flow graph construction [code analysis](tools/analysis-graph-generator) 
 
 Whether and to what extent the above steps can successfully be applied to any given source file depends on several factors. Obviously, if the submission is not of `Accepted` status, it is to be expected that even simple tokenization will fail because of malformed lexical elements. But the situation for `Accepted` submissions is not always better: programmers might have used certain non-standard features of the language that happen to be accepted by a certain compiler or interpreter. Simple cases are the use of a dollar sign as part of a C identifier. For languages like C and C++ that use a pre-processor, use of macros and conditional defines can hugely change how the code ultimately looks like.
+
+### Contributors
+
+David Kung
