@@ -26,6 +26,7 @@ The goal of Project CodeNet is to provide the *AI-for-Code* research community w
       * [Statistics](#statistics)
       * [Access and selection](#access-and-selection)
       * [Pre-processing](#pre-processing)
+   * [Contributors](#contributors)
 
 ## Introduction
 
@@ -257,4 +258,4 @@ Whether and to what extent the above steps can successfully be applied to any gi
 
 ### Contributors
 
-David Kung
+, David Kung,
