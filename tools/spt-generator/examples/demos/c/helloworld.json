@@ -2,47 +2,74 @@
 {
     "graph":{
         "version":"1.0",
+        "src-file":"./helloworld.c",
         "type":"tree",
         "directed":true,
         "order":"bfs",
+        "num-of-nodes":17,
+        "num-of-edges":16,
         "root":0,
         "nodes":[
             {
                 "id":0,
                 "label":"##",
                 "node-type":"Rule",
-                "type-rule-name":"compilationUnit"
+                "type-rule-name":"compilationUnit",
+                "type-rule-index":82,
+                "reserved-word-flag":false,
+                "dfs-index":0,
+                "depth":0
             },
             {
                 "id":1,
                 "label":"##",
                 "node-type":"Rule",
-                "type-rule-name":"functionDefinition"
+                "type-rule-name":"functionDefinition",
+                "type-rule-index":85,
+                "reserved-word-flag":false,
+                "dfs-index":1,
+                "depth":1
             },
             {
                 "id":2,
                 "label":"<EOF>",
                 "node-type":"Token",
                 "type-rule-name":"EOF",
+                "type-rule-index":-1,
+                "reserved-word-flag":false,
+                "dfs-index":16,
+                "depth":1,
                 "token-id":11
             },
             {
                 "id":3,
                 "label":"#()",
                 "node-type":"Rule",
-                "type-rule-name":"directDeclarator"
+                "type-rule-name":"directDeclarator",
+                "type-rule-index":48,
+                "reserved-word-flag":false,
+                "dfs-index":2,
+                "depth":2
             },
             {
                 "id":4,
                 "label":"{#}",
                 "node-type":"Rule",
-                "type-rule-name":"compoundStatement"
+                "type-rule-name":"compoundStatement",
+                "type-rule-index":72,
+                "reserved-word-flag":false,
+                "dfs-index":6,
+                "depth":2
             },
             {
                 "id":5,
                 "label":"main",
                 "node-type":"Token",
                 "type-rule-name":"Identifier",
+                "type-rule-index":105,
+                "reserved-word-flag":false,
+                "dfs-index":3,
+                "depth":3,
                 "token-id":1
             },
             {
@@ -50,6 +77,10 @@
                 "label":"(",
                 "node-type":"Token",
                 "type-rule-name":"'('",
+                "type-rule-index":59,
+                "reserved-word-flag":true,
+                "dfs-index":4,
+                "depth":3,
                 "token-id":2
             },
             {
@@ -57,6 +88,10 @@
                 "label":")",
                 "node-type":"Token",
                 "type-rule-name":"')'",
+                "type-rule-index":60,
+                "reserved-word-flag":true,
+                "dfs-index":5,
+                "depth":3,
                 "token-id":3
             },
             {
@@ -64,32 +99,52 @@
                 "label":"{",
                 "node-type":"Token",
                 "type-rule-name":"'{'",
+                "type-rule-index":63,
+                "reserved-word-flag":true,
+                "dfs-index":7,
+                "depth":3,
                 "token-id":4
             },
             {
                 "id":9,
                 "label":"#;",
                 "node-type":"Rule",
-                "type-rule-name":"expressionStatement"
+                "type-rule-name":"expressionStatement",
+                "type-rule-index":75,
+                "reserved-word-flag":false,
+                "dfs-index":8,
+                "depth":3
             },
             {
                 "id":10,
                 "label":"}",
                 "node-type":"Token",
                 "type-rule-name":"'}'",
+                "type-rule-index":64,
+                "reserved-word-flag":true,
+                "dfs-index":15,
+                "depth":3,
                 "token-id":10
             },
             {
                 "id":11,
                 "label":"#(#)",
                 "node-type":"Rule",
-                "type-rule-name":"postfixExpression"
+                "type-rule-name":"postfixExpression",
+                "type-rule-index":4,
+                "reserved-word-flag":false,
+                "dfs-index":9,
+                "depth":4
             },
             {
                 "id":12,
                 "label":";",
                 "node-type":"Token",
                 "type-rule-name":"';'",
+                "type-rule-index":87,
+                "reserved-word-flag":true,
+                "dfs-index":14,
+                "depth":4,
                 "token-id":9
             },
             {
@@ -97,6 +152,10 @@
                 "label":"printf",
                 "node-type":"Token",
                 "type-rule-name":"Identifier",
+                "type-rule-index":105,
+                "reserved-word-flag":false,
+                "dfs-index":10,
+                "depth":5,
                 "token-id":5
             },
             {
@@ -104,6 +163,10 @@
                 "label":"(",
                 "node-type":"Token",
                 "type-rule-name":"'('",
+                "type-rule-index":59,
+                "reserved-word-flag":true,
+                "dfs-index":11,
+                "depth":5,
                 "token-id":6
             },
             {
@@ -111,6 +174,10 @@
                 "label":"\"Hello World\"",
                 "node-type":"Token",
                 "type-rule-name":"StringLiteral",
+                "type-rule-index":108,
+                "reserved-word-flag":false,
+                "dfs-index":12,
+                "depth":5,
                 "token-id":7
             },
             {
@@ -118,6 +185,10 @@
                 "label":")",
                 "node-type":"Token",
                 "type-rule-name":"')'",
+                "type-rule-index":60,
+                "reserved-word-flag":true,
+                "dfs-index":13,
+                "depth":5,
                 "token-id":8
             }
         ],

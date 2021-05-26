@@ -68,9 +68,10 @@ A tokenizer for C/C++ (and Java) source code with output in 6 formats.
 Recognizes the following token classes: keyword, identifier, integer,
 floating, string, character, operator, and preprocessor.
 
-usage: tokenize [ -1cdhjl:m:no:rsvw ] [ FILES ]
+usage: tokenize [ -1acdhjl:m:no:rsvw ] [ FILES ]
 
 Command line options are:
+-a       : append to output file instead of create or overwrite.
 -c       : treat a # character as the start of a line comment.
 -d       : print debug info to stderr; implies -v.
 -h       : print just this text to stderr and stop.
@@ -78,7 +79,7 @@ Command line options are:
 -l<lang> : specify language explicitly (C, C++, Java).
 -m<mode> : output mode either plain (default), csv, json, jsonl, xml, or raw.
 -n       : output newlines as a special pseudo token.
--o<file> : name for output file (instead of stdout).
+-o<file> : write output to this file (instead of stdout).
 -s       : enable a special start token specifying the filename.
 -1       : treat all filename arguments as a continuous single input.
 -v       : print action summary to stderr.

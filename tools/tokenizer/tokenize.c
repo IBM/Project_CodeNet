@@ -134,7 +134,7 @@ static unsigned illegals = 0;	// count number of illegal characters
 static unsigned unexpect_eof = 0; // encountered unexpected EOF
 static unsigned num_files = 0;	// number of files read
 // keyword lookup function:
-static const char *(*is_keyword)(const char *, unsigned);
+static const char *(*is_keyword)(const char *);
 
 // Program option settings:
 static int debug = 0;		// when 1 debug output to stderr
@@ -144,11 +144,116 @@ static int hash_as_comment = 0;	// when 1 treat # as line comment
 static int start_token = 0;	// when 1 start filename pseudo-token
 static int newline_token = 0;	// when 1 output newline pseudo-token
 static int continuous_files = 0;// when 1 do not reset after each file
-static enum { C, CPP, JAVA, PYTHON } source = CPP;
+static enum { C, CPP, JAVA } source = CPP;
 
-// Use perfect hash function.
-#include "cpp_keywords.h"	// is_cpp_keyword()
-#include "java_keywords.h"	// is_java_keyword()
+/* No longer using perfect hash function but simple binary search. */
+
+/* C11 n1570.pdf 6.4.1 (44)
+   C17 n2176.pdf 6.4.1 (A.1.2) (44)
+*/
+static const char *C_keywords[] = {
+  "_Alignas",	"_Alignof",	"_Atomic",	"_Bool",	"_Complex",
+  "_Generic",	"_Imaginary",	"_Noreturn",	"_Static_assert",
+  "_Thread_local",
+
+  "auto",	"break",	"case",		"char",		"const",
+  "continue",	"default",	"do",		"double",	"else",
+  "enum",	"extern",	"float",	"for",		"goto",
+  "if",		"inline",	"int",		"long",		"register",
+  "restrict",	"return",	"short",	"signed",	"sizeof",
+  "static",	"struct",	"switch",	"typedef",	"union",
+  "unsigned",	"void",		"volatile",	"while"
+};
+
+#if 0
+/* C++ 2014 n4296.pdf 2.11 (84) */
+static const char *CPP_keywords[] = {
+  "alignas",       "alignof",       "and",           "and_eq",     "asm",
+  "auto",          "bitand",        "bitor",         "bool",       "break",
+  "case",          "catch",         "char",          "char16_t",   "char32_t",
+  "class",         "compl",         "const",         "const_cast", "constexpr",
+  "continue",      "decltype",      "default",       "delete",     "do",
+  "double",        "dynamic_cast",  "else",          "enum",       "explicit",
+  "export",        "extern",        "false",         "float",      "for",
+  "friend",        "goto",          "if",            "inline",     "int",
+  "long",          "mutable",       "namespace",     "new",        "noexcept",
+  "not",           "not_eq",        "nullptr",       "operator",   "or",
+  "or_eq"          "private",       "protected",     "public",     "register",
+  "reinterpret_cast", "return",     "short",         "signed",     "sizeof",
+  "static",        "static_assert", "static_cast",   "struct",     "switch",
+  "template",      "this",          "thread_local",  "throw",      "true",
+  "try",           "typedef",       "typeid",        "typename",   "union",
+  "unsigned",      "using",         "virtual",       "void",       "volatile",
+  "wchar_t",       "while",         "xor",           "xor_eq"
+};
+#endif
+
+/* C++23 n4885.pdf 5.11 (92) */
+static const char *CPP_keywords[] = {
+  "alignas",       "alignof",       "and",           "and_eq",     "asm",
+  "auto",          "bitand",        "bitor",         "bool",       "break",
+  "case",          "catch",         "char",          "char16_t",   "char32_t",
+  "char8_t",       "class",         "co_await",      "co_return",  "co_yield",
+  "compl",         "concept",       "const",         "const_cast", "consteval",
+  "constexpr",     "constinit",     "continue",      "decltype",   "default",
+  "delete",        "do",            "double",        "dynamic_cast", "else",
+  "enum",          "explicit",      "export",        "extern",     "false",
+  "float",         "for",           "friend",        "goto",       "if",
+  "inline",        "int",           "long",          "mutable",    "namespace",
+  "new",           "noexcept",      "not",           "not_eq",     "nullptr",
+  "operator",      "or",            "or_eq"          "private",    "protected",
+  "public",        "register",      "reinterpret_cast", "requires","return",
+  "short",         "signed",        "sizeof",        "static",  "static_assert",
+  "static_cast",   "struct",        "switch",        "template",   "this",
+  "thread_local",  "throw",         "true",          "try",        "typedef",
+  "typeid",        "typename",      "union",         "unsigned",   "using",
+  "virtual",       "void",          "volatile",      "wchar_t",    "while",
+  "xor",           "xor_eq"
+};
+
+/* Java SE 8 (50) (false, true, null are literals) */
+/* https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.9 */
+static const char *Java_keywords[] = {
+  "abstract", "assert",     "boolean", "break",     "byte",      "case",
+  "catch",    "char",       "class",   "const",     "continue",  "default",
+  "do",       "double",     "else",    "enum",      "extends",   "final",
+  "finally",  "float",      "for",     "goto",      "if",        "implements",
+  "import",   "instanceof", "int",     "interface", "long",      "native",
+  "new",      "package",    "private", "protected", "public",    "return",
+  "short",    "static",     "strictfp","super",     "switch", "synchronized",
+  "this",     "throw",      "throws",  "transient", "try",       "void",
+  "volatile", "while"
+};
+
+#define num_keywords(lang) sizeof(lang##_keywords)/sizeof(lang##_keywords[0]);
+
+/* Generic binary search lookup in some keyword table.
+   `word' to be searched must be NUL-terminated C string.
+   `table' is array of const char * of `size' sorted alphabetically.
+   Returns word found (i.e., pointer value in table) or 0.
+*/
+#define lang_is_keyword(lang)						\
+  static const char *lang##_is_keyword(const char *word)		\
+  {									\
+    int i = 0, j = num_keywords(lang);					\
+    while (i < j) {							\
+      int k = (i + j) >> 1 /* / 2 */;					\
+      const char *kw = lang##_keywords[k];				\
+      int cmp = strcmp(word, kw);					\
+      if (!cmp)								\
+	return kw;							\
+      if (cmp < 0) j = k; else i = k + 1;				\
+    }									\
+    return 0;								\
+  }
+
+/* Define individual is_keyword functions per language: */
+/* C_is_keyword */
+lang_is_keyword(C)
+/* CPP_is_keyword */
+lang_is_keyword(CPP)
+/* Java_is_keyword */
+lang_is_keyword(Java)
 
 // Append char cc to token; discard when no more room:
 #define token_add(cc) \
@@ -390,10 +495,12 @@ int tokenize(char *token, const char **type, unsigned *line, unsigned *col)
     if (isalpha(cc) || cc == '_' || cc == '$' || cc & 0x80) {
       // First char always fits.
       token[len++] = cc;
-      while (isalnum(cc = get()) || cc == '_' || cc == '$' || cc & 0x80)
+      while (isalnum(cc = get()) || cc == '_' || cc == '$' ||
+	     cc != EOF && (cc & 0x80))
         token_add(cc);
       unget(cc);
-      *type = is_keyword(token, len) ? "keyword" : "identifier";
+      token[len] = '\0';
+      *type = is_keyword(token) ? "keyword" : "identifier";
       break;
     }
 
@@ -837,10 +944,10 @@ int main(int argc, char *argv[])
   extern int opterr;
   extern int optind;
   int option;
-  char const *opt_str = "1cdhjl:m:no:rsvw";
+  char const *opt_str = "1acdhjl:m:no:rsvw";
   char usage_str[80];
 
-  char token[MAX_TOKEN+1];
+  char token[MAX_TOKEN+1]; /* leave room for a terminating NUL */
   const char *type;
   unsigned line;
   unsigned col;
@@ -849,6 +956,7 @@ int main(int argc, char *argv[])
   enum { PLAIN, CSV, JSON, JSONL, XML, RAW } mode = PLAIN;
   int first_time = 1;
   int explicit_source = 0;
+  int append = 0;
 
   sprintf(usage_str, "usage: %%s [ -%s ] [ FILES ]\n", opt_str);
 
@@ -858,6 +966,10 @@ int main(int argc, char *argv[])
 
     case '1':
       continuous_files = 1;
+      break;
+
+    case 'a':
+      append = 1;
       break;
 
     case 'c':
@@ -876,14 +988,15 @@ fputs(
 fprintf(stderr, usage_str, basename(argv[0]));
 fputs(
 "\nCommand line options are:\n"
+"-a       : append to output file instead of create or overwrite.\n"
 "-c       : treat a # character as the start of a line comment.\n"
 "-d       : print debug info to stderr; implies -v.\n"
 "-h       : print just this text to stderr and stop.\n"
 "-j       : assume input is Java (deprecated: use -l Java or .java).\n"
-"-l       : specify language explicitly (C, C++, Java).\n"
+"-l<lang> : specify language explicitly (C, C++, Java).\n"
 "-m<mode> : output mode either plain (default), csv, json, jsonl, xml, or raw.\n"
 "-n       : output newlines as a special pseudo token.\n"
-"-o<file> : name for output file (instead of stdout).\n"
+"-o<file> : write output to this file (instead of stdout).\n"
 "-s       : enable a special start token specifying the filename.\n"
 "-1       : treat all filename arguments as a continuous single input.\n"
 "-v       : print action summary to stderr.\n"
@@ -905,7 +1018,7 @@ fputs(
 	source = JAVA;
       else {
 	if (!nowarn)
-        fprintf(stderr, "(W): Unknown source %s (using C).\n", optarg);
+        fprintf(stderr, "(W): Unknown source %s (assuming C++).\n", optarg);
       }
       explicit_source = 1;
       break;
@@ -959,7 +1072,7 @@ fputs(
   }
 
   if (outfile && outfile[0]) {
-    if (!freopen(outfile, "w", stdout)) {
+    if (!freopen(outfile, append ? "a" : "w", stdout)) {
       fprintf(stderr, "(F): cannot open %s for writing.\n", outfile);
       exit(3);
     }
@@ -991,7 +1104,17 @@ fputs(
     num_files++;
 
     // Determine which keyword lookup function to use:
-    is_keyword = source == JAVA ? is_java_keyword : is_cpp_keyword;
+    switch (source) {
+    case C:
+      is_keyword = C_is_keyword;
+      break;
+    case CPP:
+      is_keyword = CPP_is_keyword;
+      break;
+    case JAVA:
+      is_keyword = Java_is_keyword;
+      break;
+    }
 
     // Header:
     switch (mode) {
