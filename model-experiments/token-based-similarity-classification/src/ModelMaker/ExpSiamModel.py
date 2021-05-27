@@ -3,7 +3,7 @@ Module for making experimental Siamese DNNs for similarity
 analysis
 """
 import sys
-import tensorflow
+import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import models
 from tensorflow.keras import layers
@@ -12,14 +12,56 @@ from ModelUtils      import *
 from FuncModelMaker  import FuncModelFactory
 
 #LOSS FUNCTIONS
+register = keras.utils.register_keras_serializable('loss_function', name='loss_function')
+
+@register
+def cappedCrossEntropy(y_true, y_pred):
+    """
+    Capped binary cross entropy loss function 
+    """
+    return -(keras.backend.cast(y_true, tf.float32) * 
+             tf.math.minimum((keras.backend.log(y_pred) + 0.1), 0) + 
+             5 * (1.0 - keras.backend.cast(y_true, tf.float32)) * 
+             tf.math.minimum((keras.backend.log(1 - y_pred) + 0.01), 0) )
+
+#@register
 def relaxedCrossEntropy(y_true, y_pred):
     """
     Relaxed binary cross entropy loss function 
     """
-    return -(keras.backend.cast(y_true, tensorflow.float32) * 
-             keras.backend.log(y_pred +0.0001) + 
-             (1.0 - keras.backend.cast(y_true, tensorflow.float32)) * 
+    return -(keras.backend.cast(y_true, tf.float32) * 
+             keras.backend.log(y_pred) + 
+             (1.0 - keras.backend.cast(y_true, tf.float32)) * 
              keras.backend.log((1 - y_pred + 0.1) / (1 + 0.1)))
+
+#@register
+def sinCrossEntropy(y_true, y_pred):
+    """
+    Binary cross entropy loss function 
+    with sin transformation of predicted probability
+    """
+    return -(keras.backend.cast(y_true, tf.float32) * 
+             keras.backend.log(keras.backend.sin(3.1415926 * (y_pred - 0.5)) / 2.0 + 0.5000001) + 
+             (1.0 - keras.backend.cast(y_true, tf.float32)) * 
+             keras.backend.log(keras.backend.sin(3.1415926 * (0.5 - y_pred)) / 2.0 + 0.5000001))
+
+def getLossFunction(loss = None):
+    """
+    Compute loss function as function of the argument
+    Parameters:
+    - loss   -- loss function as a string
+    """
+    if loss is None:
+        return "binary_crossentropy"
+    elif loss == "relaxedCrossEntropy":
+        return relaxedCrossEntropy
+    elif loss == "sinCrossEntropy":
+        return sinCrossEntropy
+    elif loss == "cappedCrossEntropy":
+        return cappedCrossEntropy
+    else:
+        sys.exit(f"Unknown loss function {loss}")
+    
 #---------------- End of lOSS FUNCTIONS ---------------------------
 
 class ExpSiameseModelFactory(FuncModelFactory):
@@ -31,7 +73,7 @@ class ExpSiameseModelFactory(FuncModelFactory):
     Set all external parameters of DNNs,
     which can be amended or even modified in each    
     """
-    def __init__(self, n_labels, regularizer = None):
+    def __init__(self, n_labels, regularizer = None, loss = None):
         """
         Initialize factory for DNNs
         Parameters:
@@ -42,8 +84,7 @@ class ExpSiameseModelFactory(FuncModelFactory):
         """
         super(ExpSiameseModelFactory, self).__init__(n_labels, 
                                     regularizer = regularizer)
-        #_loss_factory = LossFactory()
-        #self.loss_function = relaxedBinaryCrossEntropy(relaxation = 0.1, epsilon = 0.0001)
+        self.loss = getLossFunction(loss)
 
     def makeCNN(self, dnn,
                 n_tokens,
@@ -332,6 +373,6 @@ class ExpSiameseModelFactory(FuncModelFactory):
         _merged = self._absDifference(_pool1, _pool2)
         _output = self._denseClassifier(_merged, self.w_dense)
         return self.expCompile([_input1, _input2,], _output,
-            optimizer = self.optimizer, 
-            loss = "binary_crossentropy")
+                               optimizer = self.optimizer, 
+                               loss = self.loss)
 #---------------- End of class ExpSiameseModelFactory ---------------------------

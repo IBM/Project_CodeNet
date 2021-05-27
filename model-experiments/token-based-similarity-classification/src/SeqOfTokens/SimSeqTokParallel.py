@@ -24,11 +24,12 @@ sys.path.extend([f"{main_dir}/Dataset",
                  f"{main_dir}/CommonFunctions"])
 
 from SeqTok2WaySimDsTF import SeqTok2WaySimDsTF
-from ExpSiamModel import ExpSiameseModelFactory
+from ExpSiamModel      import ExpSiameseModelFactory
 from FuncModelMaker    import *
-from ProgramArguments import *
-from Utilities import *
-from DsUtilities import DataRand
+from ProgramArguments  import *
+from Utilities         import *
+from DsUtilities       import DataRand
+from ModelUtils        import UniqueSeed
 
 def makeDNN(n_tokens, args):
     """
@@ -83,6 +84,8 @@ def main(args):
     """
     resetSeeds()
     DataRand.setDsSeeds(args.seed_ds)
+    UniqueSeed.setSeed(args.seed_model)
+
     early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', 
                                                   patience=args.patience)
     callbacks = [early_stop]

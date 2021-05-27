@@ -12,9 +12,12 @@ from tensorflow.keras import initializers
 
 class UniqueSeed():
     """
-    Class for generating unique seed
+    Class for generating unique seed for 
+    model initializing DNN models
     """
+    #Initial value of seed
     seed = 1234
+    #Step at which seed is incrtemented after its each query
     step = 17
 
     @classmethod
@@ -24,6 +27,18 @@ class UniqueSeed():
         """
         cls.seed += cls.step
         return cls.seed
+    
+    @classmethod
+    def setSeed(cls, seed, step = 17):
+        """
+        Initialize seed externally 
+        Parameters:
+        - seed  -- Initial value of seed
+        - step  -- Step at which seed is incretemented 
+                   after its each query
+        """
+        cls.seed = seed
+        cls.step = step
 
     def __init__(self):
         pass

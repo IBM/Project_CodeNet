@@ -32,7 +32,9 @@ def makeArgParserCodeML(description, task = "classification"):
     parser.add_argument("--batch", default=32, type=int,
                         help="batch size")
     parser.add_argument("--seed_ds", type=int, default=101,
-                        help = "seed for randomizing dataset")
+                        help = "seed for making randomized dataset")
+    parser.add_argument("--seed_model", type=int, default=101,
+                        help = "seed for making randomized model")    
     parser.add_argument("--dnn", default="basic",
                         type=str, help="dnn model")    
     parser.add_argument('--progress', default=1, type=int,

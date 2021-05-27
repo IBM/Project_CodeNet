@@ -95,23 +95,33 @@ Before training and evaluation source code classifiers or similarity analyzers, 
 
 Here we explain how to run tokenization, training and evaluation scripts for specific case of *cpp1000* benchmark for source code classification using bag-of-tokens technique. The scripts for all other benchmarks, both for source code classification and similarity analysis, using either bag-of-tokens or sequence-of-tokens technique are ran in the similar way. The corresponding scripts has same names and same external parameters. However, they call different package applications with different set of parameters.
 
+### Tokenization
+
 For tokenizing *cpp1000* dataset go to *run/cpp1000/tokenize/* directory and run *tokenize.sh* script specifying a path to the directory with the *cpp1000* benchmark dataset as follows:
 
-`.\tokenize.sh <Path to cpp1000 benchmark dataset>`
+`./tokenize.sh <Path to cpp1000 benchmark dataset>`
 
 The script creates the directory *cpp1000ds* with a database of the tokenized source code files of the problem solutions. This database is used training and evaluation scripts both for classification and similarity analysis, both for the bag-of-tokens and the sequence-of-tokens techniques. Therefore, it is enough to run *tokenize.sh* script only once for all further runs of training and evaluation scripts on *cpp1000* benchmark.
 
 The script also creates the directory *TokenizerWorkDir* holding listing files with tokenization reports.
 
+### Traning and testing neural networks
+
 After completing tokenization of the benchmark dataset either any source code classifier or any similarity analyzer can be trained by running *train.sh* script. For training bag-of-tokens source code classifier go to the directory */run/cpp1000/class/bagtok/* and run *train.sh* script, specifying the desired number of training epochs, as follows:
 
-`.\train.sh <Number of training epochs>`
+`./train.sh <Number of training epochs>`
 
 The script creates the following directories:
 * *class_ckpt* holds check points with trained classifier model. These models are used with the script evaluating them on test dataset.
 * *dataset_statistics* holds files with datasets statistics and training, validation and test datasets for other classifiers.
 
 The trained models are evaluated with *eval.sh* script on the test dataset. The script has no external parameters, as all application parameters a set inside it. By default the script evaluates the best trained model form *class_ckpt* directory.  The script updates *dataset_statistics* directory with reports on the test dataset, and creates confusion_report directory with the classification confusion report and other files reporting the classification statistics.
+
+The training and testing scripts generate specification of datasets used for traning and testing the neural networks. Those specifications are in the form of lists of samples referring the corresponding source code files. The consistency of the generated dataset specifications against the benchmark dataset can be checked with *verify_ds.sh* script. The script can be ran as follows:
+
+`/verify_ds.sh <Path to cpp1000 benchmark dataset>`
+
+The script prints some statistics on the datasets and error messages if any inconsistencies are found.
 
 ## Benchmark results
 

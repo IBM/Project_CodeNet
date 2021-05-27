@@ -134,7 +134,7 @@ def main(args):
                as object returned by ArgumentParser
     """
     if not os.path.exists(args.ds):
-        sys.exit(f"Directory {args.source} of source code dataset is not found")
+        sys.exit(f"Directory {args.ds} of source code dataset is not found")
     n_total_errors = 0
     test_ds, test_size, n_errors = readDataset(args.test)
     n_total_errors += n_errors

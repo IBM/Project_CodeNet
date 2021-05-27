@@ -87,6 +87,7 @@ def main(args):
     """
     resetSeeds()
     DataRand.setDsSeeds(args.seed_ds)
+    UniqueSeed.setSeed(args.seed_model)
 
     early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', 
                                                   patience=args.patience)

@@ -1,15 +1,17 @@
 
 """
-Program for predicting similarity of two source code files by 
-Sequence or Tokens technique by 2-way siamese type DNN in multi-GPU mode
-
+Experimental program for training source code similarity analyzer
+using sequence or Tokens technique by 2-way Siamese type DNN
+Uses:
+ - experimental Siameze CNN 
+ - custom metric
+ - class sample weights
+runs in multi-GPU mode
 History of traing is pickled to be plotted with other application
 
 The programm processes all files in the given directory
 Each file there contains all samples of one class of samples,
 i.e. tokenised source code
-
-Number of classes (lables) is defined automatically
 """
 import sys
 import os
@@ -57,7 +59,8 @@ def makeDNN(n_tokens, args):
         print("Siamese DNN for similarity analysis is constructed")
     else:
         _model_factory = ExpSiameseModelFactory(
-            1, regularizer = (args.l1, args.l2))
+            1, regularizer = (args.l1, args.l2),
+            loss = args.loss)
         _dnn = _model_factory.makeCNN(args.dnn,
             n_tokens, _convolutions, args.dense,
             pool = args.pool,
@@ -108,7 +111,7 @@ def main(args):
     lrOnPlateaur = tf.keras.callbacks.ReduceLROnPlateau(
         monitor='loss', factor=0.5, patience=2, 
         cooldown=0, min_delta=0.0001, min_lr=0.0001, verbose=1)
-    callbacks.append(lrOnPlateaur)
+    #callbacks.append(lrOnPlateaur)
 
     if args.ckpt_dir:
         latest_checkpoint = setupCheckpoint(args.ckpt_dir)
@@ -183,11 +186,11 @@ def main(args):
 # Args are described below
 ################################################################################
 if __name__ == '__main__':
-    print("\nCODE SIMILARITY WITH SEQUENCE OF TOKENS TECHNIQUE BY SIAMESE DNN")
+    print("\nEXPERIMENTAL SOURCE CODE SIMILARITY ANALYZER BY SIAMESE DNN")
 
     #Handle command-line arguments
     parser = makeArgParserCodeML(
-        "Sequence of tokens source code similarity analysis by Siamese DNN",
+        "Experimental source code similarity analysis by Siamese DNN",
         task = "similarity")
     parser = addSeqTokensArgs(parser)
     parser = addRegularizationArgs(parser)
@@ -209,6 +212,8 @@ if __name__ == '__main__':
                         default="val_accuracy", 
                         choices=["val_accuracy", "val_loss"],
                         help="metric to monitor for checkpoints")
+    parser.add_argument("--loss", type=str, default=None, 
+                        help="loss function to optimize")
     args = parseArguments(parser)
     checkConvolution(args)
 
