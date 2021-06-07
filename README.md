@@ -1,5 +1,7 @@
 # Project CodeNet
 
+[![DOI](https://zenodo.org/badge/363800912.svg)](https://zenodo.org/badge/latestdoi/363800912)
+
 The goal of Project CodeNet is to provide the *AI-for-Code* research community with a large scale, diverse, and high quality curated dataset to drive innovation in AI techniques. 
 
 ## Table of Contents
@@ -10,7 +12,7 @@ The goal of Project CodeNet is to provide the *AI-for-Code* research community w
       * [Potential use cases](#potential-use-cases)
       * [Usability](#usability)
    * [Models and experiments](#models-and-experiments)
-   * [Relevant link](#relevant-link)
+   * [Relevant links](#relevant-links)
    * [Download the dataset](#download-the-dataset)
    * [Dataset overview](#dataset-overview)
       * [Dataset statistics](#dataset-statistics)
@@ -42,7 +44,7 @@ Another area that Project CodeNet addressed is the quality of the data samples. 
 
 ### Benchmarks
 
-In light of these issues, we developed several benchmarks that have been filtered to remove identical problem clusters and near-duplicate code samples, so that performance metrics can be measured on training and test data samples with the appropriate statistics. There are two C++ benchmarks similar to the popular POJ-104 but pproximately ten times in size. We felt that the size increase is necessary, since [98% accuracy](https://github.com/zhangj111/astnn) has been already achieved in code classification on POJ-104. An order of magnitude larger dataset will leave ample room to advance the state of the art with more complex neural networks and algorithms. The other two benchmarks are in Python and Java, which provides a different flavor because the frequent use of library functions.
+In light of these issues, we have extracted several benchmark datasets from CodeNet for users to perform code classification and code similarity experiments. They have been filtered to remove identical problem clusters and near-duplicate code samples, so that performance metrics can be measured on training and test data samples with the appropriate statistics. There are two C++ benchmark datasets that are similar to the popular POJ-104 but are approximately ten times in size. We felt that the size increase is necessary, since [98% accuracy](https://github.com/zhangj111/astnn) has been already achieved in code classification on POJ-104. An order of magnitude larger dataset will leave ample room to advance the state of the art with more complex neural networks and algorithms. The other two benchmark datasets are in Python and Java, which provides a different flavor because the frequent use of library functions.
 
 ### Potential use cases
 
@@ -54,24 +56,30 @@ To facilitate creation of customized benchmarks and dataset, we provide a set of
 
 ## Models and experiments
 
-We have performed numerous experiments on the CodeNet dataset. The goal of these experiments is to produce a set of baseline models and results for users of the CodeNet dataset to gauge their research. The run scripts and training scripts are available in the model-experiments directory.
+We have performed numerous experiments on the CodeNet dataset. The goal of these experiments is to produce a set of baseline models and results for users of the CodeNet dataset to gauge their research. The run scripts and training scripts are available in the model-experiments directory. The classification and similarity experiments use the benchmark datasets we extracted from CodeNet as training and test datasets. In addition to experiments based on token sequences, we also have experiments leveraging graph neural networks (GNN). For the convenience of the users interested in GNN's, we have included the simplified parse tree (SPT) representation of the code samples for each benchmark dataset. The experiment on Masked Language Model has a companion jupyter notebook in the notebooks directory.
 
-## Relevant link
+## Relevant links
 
-[Project CodeNet paper](./ProjectCodeNet_NeurIPS2021.pdf)
+- [Project CodeNet full dataset: Project_CodeNet.tar.gz](
+https://dax-cdn.cdn.appdomain.cloud/dax-project-codenet/1.0.0/Project_CodeNet.tar.gz)
+- [Project CodeNet metadata: Project_CodeNet_metadata.tar.gz](https://dax-cdn.cdn.appdomain.cloud/dax-project-codenet/1.0.0/Project_CodeNet_metadata.tar.gz)
+- [Project CodeNet paper: ProjectCodeNet_NeurIPS2021.pdf](./ProjectCodeNet_NeurIPS2021.pdf)
 
 ## Download the dataset
 
-Download the full dataset
-[here](https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/).
+Download the full dataset in our [data repository]
+(https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/).
 
 `tar -zxf Project_CodeNet_full.tar.gz`
 to uncompress and untar. The directory structure and how the code samples are organized are explained [here](README.md#directory-structure-and-naming-convention).
 
-The 4 benchmarks, Project_CodeNet_C++1000, Project_CodeNet_C++1400,
+The 4 benchmark datasets, Project_CodeNet_C++1000, Project_CodeNet_C++1400,
 Project_CodeNet_Python800, and Project_CodeNet_Java250 are included in the
-full dataset and are available separately
-[here](https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/). They can be used for code classification and code similarity research as a replacement of or in addition to the dataset [POJ-104](https://sites.google.com/site/treebasedcnn/).
+full dataset and are available separately in the "Archive Dataset File" column of the table in the "Get this Dataset" 
+section in our [data repository](https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/). 
+They can be used for code classification and code similarity research as a replacement of or in addition to the dataset [POJ-104](https://sites.google.com/site/treebasedcnn/).
+
+To expedite AI for code research using graph neural netowrks, we have included the simplified parse tree (SPT) representation of the code samples for each benchmark dataset. They are available in the "Archive SPT File" column of the table in the "Get this Dataset" section in our [data repository](https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/).
 
 ## Dataset overview
 

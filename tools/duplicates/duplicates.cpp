@@ -59,10 +59,8 @@ static int csv_summary = 0;	 // when 1 output in CSV format
 static int out_singles = 0;	 // when 1 output singletons as well
 static unsigned num_tokens_threshold = 20;
 static unsigned num_samples_discarded = 0;
-static double threshold_0 = 0.9; //0.8 Jaccard
-static double threshold_1 = 0.8; //0.7 Jaccard
-static double threshold_2 = 0.9; // LCS
-static double threshold_3 = 0.9; // COSINE
+static double threshold_0 = 0.9; // Jaccard, LCS, COSINE
+static double threshold_1 = 0.8; // Jaccard
 static enum { JACCARD, LCS, COSINE } mode = JACCARD;
 static const char *delim = " ";
 static const char *filename = "stdin";
@@ -410,11 +408,11 @@ static void check_samples()
       case LCS: {
 	// Cheap upperbound calculation:
 	unsigned up = lcs_upperbound(it1->token_bag, it2->token_bag);
-	if (up < s1 * threshold_2)
+	if (up < s1 * threshold_0)
 	  continue;
 
 	unsigned lcs_len = lcs(it1->token_seq, it2->token_seq, s1, s2);
-	if (lcs_len >= s1 * threshold_2) {
+	if (lcs_len >= s1 * threshold_0) {
 	  // Flag it2 (always beyond it1) as dealt with:
 	  it2->flag = true;
 	  if (cluster_size == 1)
@@ -443,7 +441,7 @@ static void check_samples()
 
       case COSINE: {
 	double similarity = cosine(it1->token_bag, it2->token_bag);
-	if (similarity >= threshold_3) {
+	if (similarity >= threshold_0) {
 	  // Flag it2 (always beyond it1) as dealt with:
 	  it2->flag = true;
 	  if (cluster_size == 1)
@@ -503,7 +501,7 @@ int main(int argc, char *argv[])
 {
   extern int optind;
   int option;
-  char const *opt_str = "cdhm:M:o:stvw";
+  char const *opt_str = "cdhi:j:m:M:o:stvw";
   char usage_str[80];
 
   char *outfile = 0;
@@ -529,6 +527,13 @@ fputs(
 "The input is a file (or files) with one sample per line. A sample consists\n"
 "of a unique (within the input) identifier for the source code, e.g.\n"
 "its file name or its file name path, and a list of space-separated tokens.\n\n"
+"Two samples are reported as near-duplicates depending on the thresholds set\n"
+"for the various similarity metrics (thresholds must be in [0..1]):\n"
+"1. in Jaccard mode, the set similarity score must meet the 1st threshold and\n"
+"   the multiset score meet the 2nd threshold;\n"
+"2. in LCS mode, the ratio of common subsequence length and input length must\n"
+"   be at least the 1st threshold value;\n"
+"3. in Cosine mode, the cosine similarity must be at least the 1st threshold.\n\n"
 , stdout);
 fprintf(stderr, usage_str, basename(argv[0]));
 fputs(
@@ -536,6 +541,8 @@ fputs(
 "-c       : output summary in CSV instead of plain text (default) to stderr.\n"
 "-d       : print debug info to stderr; implies -v.\n"
 "-h       : print just this text to stderr and stop.\n"
+"-i<num>  : 1st Jaccard (or LCS, or Cosine) threshold value (default 0.9).\n"
+"-j<num>  : 2nd Jaccard threshold value (default 0.8).\n"
 "-m<mode> : operation mode either jaccard (default), lcs, or cosine.\n"
 "-M<int>  : samples smaller than this number are discarded (default 20).\n"
 "-o<file> : name for output file (instead of stdout).\n"
@@ -545,6 +552,14 @@ fputs(
 "-w       : suppress all warning messages.\n",
       stderr);
       return 0;
+
+    case 'i':
+      threshold_0 = atof(optarg);
+      break;
+
+    case 'j':
+      threshold_1 = atof(optarg);
+      break;
 
     case 'm':
       if (!strcmp(optarg, "jaccard"))

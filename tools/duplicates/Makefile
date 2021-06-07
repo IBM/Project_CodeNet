@@ -18,6 +18,7 @@ duplicates: duplicates.o
 
 .PHONY: test
 test: duplicates
+	./duplicates -h
 	bash -c 'time ./duplicates test_tokens.tsv'
 
 .PHONY: clean
