@@ -56,7 +56,7 @@ To facilitate creation of customized benchmarks and dataset, we provide a set of
 
 ## Models and experiments
 
-We have performed numerous experiments on the CodeNet dataset. The goal of these experiments is to produce a set of baseline models and results for users of the CodeNet dataset to gauge their research. The run scripts and training scripts are available in the model-experiments directory. The classification and similarity experiments use the benchmark datasets we extracted from CodeNet as training and test datasets. In addition to experiments based on token sequences, we also have experiments leveraging graph neural networks (GNN). For the convenience of the users interested in GNN's, we have included the simplified parse tree (SPT) representation of the code samples for each benchmark dataset. The experiment on Masked Language Model has a companion jupyter notebook in the notebooks directory.
+We have performed numerous experiments on the CodeNet dataset. The goal of these experiments is to produce a set of baseline models and results for users of the CodeNet dataset to gauge their research. The run scripts and training scripts are available in the model-experiments directory. The classification and similarity experiments use the benchmark datasets we extracted from CodeNet as training and test datasets. In addition to experiments based on token sequences, we also have experiments leveraging graph neural networks (GNN). For the convenience of the users interested in GNN's, we have included the simplified parse tree (SPT) representation of the code samples for each benchmark dataset. The experiment on Masked Language Model has a companion Jupyter notebook in the notebooks directory.
 
 ## Relevant links
 
@@ -79,7 +79,7 @@ full dataset and are available separately in the "Archive Dataset File" column o
 section in our [data repository](https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/). 
 They can be used for code classification and code similarity research as a replacement of or in addition to the dataset [POJ-104](https://sites.google.com/site/treebasedcnn/).
 
-To expedite AI for code research using graph neural netowrks, we have included the simplified parse tree (SPT) representation of the code samples for each benchmark dataset. They are available in the "Archive SPT File" column of the table in the "Get this Dataset" section in our [data repository](https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/).
+To expedite AI for code research using graph neural networks, we have included the simplified parse tree (SPT) representation of the code samples for each benchmark dataset. They are available in the "Archive SPT File" column of the table in the "Get this Dataset" section in our [data repository](https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/).
 
 ## Dataset overview
 
