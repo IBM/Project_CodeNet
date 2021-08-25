@@ -106,7 +106,7 @@ def main():
                         help='number of epochs to train (default: 1000)')
     parser.add_argument('--num_workers', type=int, default=0,
                         help='number of workers (default: 0)')
-    parser.add_argument('--dataset', type=str, default="python1k", choices={"python1k","java250", "python800", "c++1000", "c++1400"},
+    parser.add_argument('--dataset', type=str, default="small", choices={"small","java250", "python800", "c++1000", "c++1400"},
                         help='dataset name (default: python1k)')
 
     parser.add_argument('--filename', type=str, default="test",
