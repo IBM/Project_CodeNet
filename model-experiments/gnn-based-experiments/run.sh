@@ -10,7 +10,7 @@ PROJECT=$PWD
 DATA=$PROJECT/data
 SAVE=$PROJECT/saved_models
 
-DATASET=python1k
+DATASET=small
 MODEL=gcn
 
 LR=1e-3
