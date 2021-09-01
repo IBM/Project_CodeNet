@@ -63,7 +63,7 @@ We have performed numerous experiments on the CodeNet dataset. The goal of these
 - [Project CodeNet full dataset: Project_CodeNet.tar.gz](
 https://dax-cdn.cdn.appdomain.cloud/dax-project-codenet/1.0.0/Project_CodeNet.tar.gz)
 - [Project CodeNet metadata: Project_CodeNet_metadata.tar.gz](https://dax-cdn.cdn.appdomain.cloud/dax-project-codenet/1.0.0/Project_CodeNet_metadata.tar.gz)
-- [Project CodeNet paper:](https://arxiv.org/abs/2105.12655)
+- [Project CodeNet paper: Arxiv paper](https://arxiv.org/abs/2105.12655)
 
 ## Download the dataset
 
