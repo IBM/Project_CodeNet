@@ -63,7 +63,7 @@ We have performed numerous experiments on the CodeNet dataset. The goal of these
 - [Project CodeNet full dataset: Project_CodeNet.tar.gz](
 https://dax-cdn.cdn.appdomain.cloud/dax-project-codenet/1.0.0/Project_CodeNet.tar.gz)
 - [Project CodeNet metadata: Project_CodeNet_metadata.tar.gz](https://dax-cdn.cdn.appdomain.cloud/dax-project-codenet/1.0.0/Project_CodeNet_metadata.tar.gz)
-- [Project CodeNet paper: ProjectCodeNet_NeurIPS2021.pdf](./ProjectCodeNet_NeurIPS2021.pdf)
+- [Project CodeNet paper:](https://arxiv.org/abs/2105.12655)
 
 ## Download the dataset
 
@@ -266,4 +266,4 @@ Whether and to what extent the above steps can successfully be applied to any gi
 
 ### Contributors
 
-Ruchir Puri, David Kung, Geert Janssen, Giacomo Domeniconi, Vladimir Zolotov, Jie Chen, Mihir Choudhury, Lindsey Decker, Veronika Thost, Luca Buratti, Saurabh Pujar, Ulrich Finkler.
+Ruchir Puri, David S. Kung, Geert Janssen, Wei Zhang, Giacomo Domeniconi, Vladimir Zolotov, Julian Dolby, Jie Chen, Mihir Choudhury, Lindsey Decker, Veronika Thost, Luca Buratti, Saurabh Pujar, Shyam Ramji, Ulrich Finkler, Susan Malaika, Frederick Reiss.
