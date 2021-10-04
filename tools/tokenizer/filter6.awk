@@ -97,7 +97,7 @@ BEGIN {
 # Make sure all conditions are mutually exclusive, except last one.
 # Last one is made exclusive by next_state==-1.
 # Must use next_state to avoid immediate action on current line.
-# All rules that match must set next_state to something other than -1.
+# All rules when matched must set next_state to something other than -1.
 
 # Instead of composing new CSV record could also modify $0 via
 # assignments to its fields (like $3="identifier").
@@ -166,12 +166,14 @@ BEGIN {
     next_state=4
 }
 
-# Seen #include <...>, or #include <...newline.
+# Handling #include <...>, or #include <...newline.
 (state == 4 && ($3 == "newline" || $4 == ">")) {
     # When newline it's an error, but act as if > was present:
     empty_out()
     print id_lin "," id_col ",string-sys-filename,\"" filename "\""
-    # Note: suppressing this token.
+    if ($3 == "newline")
+	print $0
+    # else suppressing the > token.
     next_state=0
 }
 
@@ -212,7 +214,7 @@ BEGIN {
     next_state=9
 }
 
-# Handle #define name [whitespace] newline
+# Handle #define name whitespace? newline
 ((state == 8 || state == 9) && $3 == "newline") {
     empty_out()
     print id_lin "," id_col ",identifier-macro-def," macro_name
@@ -230,10 +232,11 @@ BEGIN {
 
 # Default rule; always executed:
 # 1. no prior rule matched:
-#    - print current token except for whitespace
-#    - back to state 0 to quickly recover for any errors in input
 #    - stay in same state only for whitespace, newline, and continuation;
 #      this allows for their presence without explicit mention in rules
+#    - output any previously suppressed tokens (to not lose them)
+#    - print current token except for whitespace
+#    - back to state 0 to quickly recover for any errors in input
 # 2. some rule matched:
 #    - simply move on to next state as stated in that rule
 #    - reset next_state to -1
@@ -241,9 +244,11 @@ BEGIN {
     if (next_state == -1) {
 	# Echo the current token as is (ignore whitespace though):
 	if ($3 != "whitespace") {
-	    print $0
-	    if ($3 != "newline" && $3 != "continuation")
+	    if ($3 != "newline" && $3 != "continuation") {
+		empty_out()
 		state=0
+	    }
+	    print $0
 	}
 	# otherwise: Do not change state!
     }
