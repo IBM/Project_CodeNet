@@ -14,11 +14,15 @@
 
 # Ambiguous tokens in C/C++:
 # < > delimiters of filename in preprocessor include directive
+# Resolved by using preceding #include context
 # < > delimiters of template parameters
 # < less than operator
+# Resolve: preceding context keyword template, template <+
 # > greater than operator
+# Resolve: preceding context keyword template <
 # " " delimiters of filename in preprocessor include directive
 # " " delimiters of string literal
+# Resolved by using preceding #include context
 # ( ) expression grouping
 # ( ) argument list
 # { } block
@@ -29,9 +33,11 @@
 # ~ unary operator
 # - unary operator
 # - binary operator
-# * unary operator
-# * binary operator
+# Resolve: no white-space after - then unary?
+# * unary operator (dereference pointer)
+# * binary operator (multiplication)
 # * pointer declarator
+# Can of worms: overloaded operator symbols
 
 # Simplistic CPP line syntax:
 # "#" directive-name (token)* newline
@@ -91,7 +97,7 @@ BEGIN {
 # Make sure all conditions are mutually exclusive, except last one.
 # Last one is made exclusive by next_state==-1.
 # Must use next_state to avoid immediate action on current line.
-
+# All rules that match must set next_state to something other than -1.
 
 # Instead of composing new CSV record could also modify $0 via
 # assignments to its fields (like $3="identifier").
@@ -100,6 +106,12 @@ BEGIN {
 (state == 0 && $4 == "#") {
     push($0)
     next_state=1
+}
+
+# The keyword template provides context for some < and > disambiguation.
+(state == 0 && $4 == "template") {
+    print $0
+    next_state=0 # switched off for now
 }
 
 # # seen; expect directive or identifier.
@@ -137,8 +149,6 @@ BEGIN {
     next_state=0
 }
 
-# (state == 2 && anything else) => default action.
-
 # Collect all tokens after the < till >.
 # Treat first (assume its an identifier) specially to get its coordinates.
 (state == 3 && $3 == "identifier") {
@@ -149,29 +159,42 @@ BEGIN {
     next_state=4
 }
 
-# Keep collecting tokens till >.
-(state == 4 && $4 != ">") {
+# Keep collecting tokens till > or newline.
+(state == 4 && $3 != "newline" && $4 != ">") { # eats up anything
     filename=filename $4
     # Note: suppressing this token.
     next_state=4
 }
 
-# Seen #include <...>.
-(state == 4 && $4 == ">") {
+# Seen #include <...>, or #include <...newline.
+(state == 4 && ($3 == "newline" || $4 == ">")) {
+    # When newline it's an error, but act as if > was present:
     empty_out()
     print id_lin "," id_col ",string-sys-filename,\"" filename "\""
     # Note: suppressing this token.
     next_state=0
 }
 
-# states 5, 6 not used for now.
+# Handle template <.
+(state == 5 && $4 == "<") {
+    $3="start-template-paramlist"
+    print $0
+    next_state=6
+}
+
+# Handle template < >, explicit specialization.
+(state == 6 && $4 == ">") {
+    $3="end-template-paramlist"
+    print $0
+    next_state=0
+}
 
 # Handle #define name.
 (state == 7 && $3 == "identifier") {
     id_lin=$1
     id_col=$2
     macro_name=$4
-    # Note: modifying this token.
+    # Note: modifying this token later.
     next_state=8
 }
 
@@ -183,35 +206,46 @@ BEGIN {
     next_state=0
 }
 
-# Handle #define name (.
+# Handle #define name whitespace
 (state == 8 && $3 == "whitespace") {
+    # Note: suppressing this token.
+    next_state=9
+}
+
+# Handle #define name [whitespace] newline
+((state == 8 || state == 9) && $3 == "newline") {
     empty_out()
-    print id_lin "," id_col ",identifier-macro-const," macro_name
+    print id_lin "," id_col ",identifier-macro-def," macro_name
+    print $0
     next_state=0
 }
 
-# Handle #define name.
-(state == 8 && $3 != "whitespace" && $4 != "(") {
+# Handle #define name whitespace !newline.
+(state == 9 && $3 != "newline") {
     empty_out()
-    print id_lin "," id_col ",identifier-macro-def," macro_name
-
-    if ($4 == "#") { # With -n should never happen.
-	push($0)
-	next_state=1
-    }
-    else { # Most probably a newline.
-	print $0
-	next_state=0
-    }
+    print id_lin "," id_col ",identifier-macro-const," macro_name
+    print $0
+    next_state=0
 }
 
-# Default rule; always executed.
+# Default rule; always executed:
+# 1. no prior rule matched:
+#    - print current token except for whitespace
+#    - back to state 0 to quickly recover for any errors in input
+#    - stay in same state only for whitespace, newline, and continuation;
+#      this allows for their presence without explicit mention in rules
+# 2. some rule matched:
+#    - simply move on to next state as stated in that rule
+#    - reset next_state to -1
 {
     if (next_state == -1) {
-	# Echo all other tokens as is (ignore whitespace though):
-	if ($3 != "whitespace")
+	# Echo the current token as is (ignore whitespace though):
+	if ($3 != "whitespace") {
 	    print $0
-	# Do not change state!
+	    if ($3 != "newline" && $3 != "continuation")
+		state=0
+	}
+	# otherwise: Do not change state!
     }
     else {
 	state=next_state
