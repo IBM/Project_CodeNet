@@ -39,7 +39,7 @@ static int first_time = 1;
 static int start_token = 0;       // when 1 start filename pseudo-token
 static int continuous_files = 0;  // when 1 do not reset after each file
 static enum { PLAIN, CSV, JSON, JSONL, XML, RAW } mode = PLAIN;
-static int output_layout = 0;	  // when 1 output layout pseudo tokens
+static int output_layout = 0;     // when 1 output layout pseudo tokens
 
 static const char *keywords[] = {
   "False",  "None",   "True",    "and",      "as",       "assert", "async",
@@ -67,18 +67,18 @@ static void emit(const char *s, unsigned line,  unsigned col)
     case JSON:
     case JSONL:
       if (first_time)
-	first_time = 0;
+        first_time = 0;
       else {
-	if (mode == JSON) fputc(',', stdout);
-	fputc('\n', stdout);
+        if (mode == JSON) fputc(',', stdout);
+        fputc('\n', stdout);
       }
       fprintf(stdout, "{ \"line\": %u, \"column\": %u, "
-	      "\"class\": \"layout\", \"token\": \"%s\" }", line, col, s);
+              "\"class\": \"layout\", \"token\": \"%s\" }", line, col, s);
       break;
     case XML:
       fprintf(stdout,
-	      "<token line=\"%u\" column=\"%u\" class=\"layout\">%s</token>\n",
-	      line, col, s);
+              "<token line=\"%u\" column=\"%u\" class=\"layout\">%s</token>\n",
+              line, col, s);
       break;
     }
   }
@@ -88,12 +88,12 @@ static void emit(const char *s, unsigned line,  unsigned col)
 #define MAX_INDENTS 128
 static unsigned indents[MAX_INDENTS];
 static unsigned *sp = indents;
-#define indents_reset()	do { sp = indents; } while(0)
-#define indents_empty()	(sp == indents)
-#define indents_full()	(sp == indents+MAX_INDENTS)
-#define indents_top()	(indents_empty() ? 0 : *(sp-1))
-#define indents_push(i)	do { assert(!indents_full()); *sp++ = (i); } while(0)
-#define indents_pop()	do { assert(!indents_empty()); sp--; } while(0)
+#define indents_reset() do { sp = indents; } while(0)
+#define indents_empty() (sp == indents)
+#define indents_full()  (sp == indents+MAX_INDENTS)
+#define indents_top()   (indents_empty() ? 0 : *(sp-1))
+#define indents_push(i) do { assert(!indents_full()); *sp++ = (i); } while(0)
+#define indents_pop()   do { assert(!indents_empty()); sp--; } while(0)
 
 // emit NEWLINE and deal with indentation
 static void process_newline(unsigned indent)
@@ -171,7 +171,7 @@ static int utf8_codepoint(int cc, int *len, int bytes[4])
   else { /* invalid utf-8 start byte */
     if (!nowarn)
       fprintf(stderr, "(W): [%s:%u] Invalid UTF-8 start byte 0x%02x.\n",
-	      filename, linenr, cc);
+              filename, linenr, cc);
     return cc;
   }
   /* collect all follow bytes: */
@@ -179,15 +179,15 @@ static int utf8_codepoint(int cc, int *len, int bytes[4])
     cc = get();
     if (cc == EOF) { /* unexpected EOF in utf-8 sequence */
       if (!nowarn)
-	fprintf(stderr, "(W): [%s:%u] Unexpected EOF in UTF-8 sequence.\n",
-		filename, linenr);
+        fprintf(stderr, "(W): [%s:%u] Unexpected EOF in UTF-8 sequence.\n",
+                filename, linenr);
       return EOF;
     }
     bytes[(*len)++] = cc;
     if ((cc & 0xC0) != 0x80) { /* invalid utf-8 follow byte */
       if (!nowarn)
-	fprintf(stderr, "(W): [%s:%u] Invalid UTF-8 follow byte 0x%02x.\n",
-		filename, linenr, cc);
+        fprintf(stderr, "(W): [%s:%u] Invalid UTF-8 follow byte 0x%02x.\n",
+                filename, linenr, cc);
       return cc;
     }
     cp <<= 6;
@@ -199,7 +199,7 @@ static int utf8_codepoint(int cc, int *len, int bytes[4])
     /* invalid Unicode code point. */
     if (!nowarn)
       fprintf(stderr, "(W): [%s:%u] Invalid Unicode code point 0x%04x.\n",
-	      filename, linenr, cp);
+              filename, linenr, cp);
   }
   return cp;
 }
@@ -261,7 +261,7 @@ static int tokenize(char *token, const char **type,
       cc = get();
       // Maybe EOF!
       if (!brackets_opened && !strchr(" \t\n#\r\f", cc))
-	process_newline(0);
+        process_newline(0);
       goto restart;
     }
 
@@ -274,8 +274,8 @@ static int tokenize(char *token, const char **type,
     if (cc == EOF) {
       // Undo any outstanding indents:
       while (!indents_empty()) {
-	emit("DEDENT", linenr, column);
-	indents_pop();
+        emit("DEDENT", linenr, column);
+        indents_pop();
       }
       return 0;
     }
@@ -385,9 +385,9 @@ static int tokenize(char *token, const char **type,
 
             token_add(cc);
             // Assume \ is not escaped itself. Happens though!
-	    if (pc == '\\') // escape next char; no check
-	      cc = '\0';
-	    else
+            if (pc == '\\') // escape next char; no check
+              cc = '\0';
+            else
             if (cc == qc) { // a first unescaped quote
               int q2 = get();
               token_add(q2);
@@ -419,8 +419,8 @@ static int tokenize(char *token, const char **type,
       do {
         token_add(cc);
         if (pc == '\\') // escape next char; no check
-	  cc = '\0';
-	else
+          cc = '\0';
+        else
         if (cc == qc) { // unescaped quote
           *type = "string";
           break;
@@ -459,29 +459,29 @@ static int tokenize(char *token, const char **type,
     if (is_id_start(cp, utf8_len)) {
       int i;
       for (i = 0; i < utf8_len; i++)
-	token_add(utf8_bytes[i]);
+        token_add(utf8_bytes[i]);
     ident_token:
       cc = get();
       cp = utf8_codepoint(cc, &utf8_len, utf8_bytes);
       if (cp == EOF) // bad code point; already reported.
-	break;
+        break;
       all_ascii &= utf8_len == 1;
       while (is_id_follow(cp, utf8_len)) {
-	int i;
-	for (i = 0; i < utf8_len; i++)
-	  token_add(utf8_bytes[i]);
-	cc = get();
-	cp = utf8_codepoint(cc, &utf8_len, utf8_bytes);
-	if (cp == EOF) // bad code point; already reported.
-	  break;
-	all_ascii &= utf8_len == 1;
+        int i;
+        for (i = 0; i < utf8_len; i++)
+          token_add(utf8_bytes[i]);
+        cc = get();
+        cp = utf8_codepoint(cc, &utf8_len, utf8_bytes);
+        if (cp == EOF) // bad code point; already reported.
+          break;
+        all_ascii &= utf8_len == 1;
       }
       // Undo look ahead:
       while (utf8_len)
-	unget(utf8_bytes[--utf8_len]);
+        unget(utf8_bytes[--utf8_len]);
       token[len] = '\0';
       *type = all_ascii && is_keyword(token, keywords, num_keywords)
-	? "keyword" : "identifier";
+        ? "keyword" : "identifier";
       break;
     }
 
@@ -827,7 +827,7 @@ int main(int argc, char *argv[])
 fputs(
 "A tokenizer for Python (3) source code with output in 6 formats.\n"
 "Recognizes the following token classes: keyword, identifier, integer,\n"
-"floating, imaginary, string, and operator.\n\n", stdout);
+"floating, imaginary, string, and operator.\n\n", stderr);
 fprintf(stderr, usage_str, basename(argv[0]));
 fputs(
 "\nCommand line options are:\n"
@@ -963,11 +963,11 @@ fputs(
     while (tokenize(token, &type, &line, &col)) {
       switch (mode) {
       case RAW:
-	// Watch out for multi-line strings
+        // Watch out for multi-line strings
         if (!strcmp(type, "string"))
           RAW_escape(stdout, token);
-	else
-	  fputs(token, stdout);
+        else
+          fputs(token, stdout);
         fputc('\n', stdout);
         break;
       case PLAIN:
