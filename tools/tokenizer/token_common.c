@@ -25,7 +25,7 @@ unsigned num_files = 0;    // number of files read
 int debug = 0;             // when 1 debug output to stderr
 int verbose = 0;           // when 1 info output to stderr
 int nowarn = 0;            // when 1 warnings are suppressed
-Language source = C;	   // language mode
+Language source = C;       // language mode
 
 /* Conversion table from filename extension to language code.
    To find language code, consider all entries and check each ext
@@ -52,7 +52,7 @@ static const struct { const char *ext; Language lang; const char *name; }
    Returns word found (i.e., pointer value in table) or 0.
 */
 const char *is_keyword(const char *word,
-		       const char *table[], unsigned size)
+                       const char *table[], unsigned size)
 {
   int i = 0, j = size;
   while (i < j) {
@@ -90,7 +90,7 @@ void remove_BOM(void)
     if (c2 == 0xBB) {
       int c3 = getchar();
       if (c3 == 0xBF) {
-	return;
+        return;
       }
       if (c3 != EOF) buffer[buffered++] = c3;
     }
@@ -217,7 +217,7 @@ Language detect_lang(void)
     int i;
     for (i = 0; i < sizeof(langs)/sizeof(langs[0]); i++)
       if (!strcmp(p, langs[i].ext))
-	return langs[i].lang;
+        return langs[i].lang;
   }
   return C;
 }
