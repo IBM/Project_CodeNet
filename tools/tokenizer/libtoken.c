@@ -1066,7 +1066,8 @@ unsigned C_tokenize(const char **token, const char **type,
           if (!strcmp("...", token_buf) ||
               !strcmp("<=>", token_buf) ||
               !strcmp("->*", token_buf) ||
-              !strcmp("<<=", token_buf)) {
+              !strcmp("<<=", token_buf) ||
+              !strcmp(">>=", token_buf)) {
             // Triple char operator/punctuator.
             *type = "operator";
             break;
