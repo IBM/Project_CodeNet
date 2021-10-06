@@ -37,6 +37,8 @@
 # * unary operator (dereference pointer)
 # * binary operator (multiplication)
 # * pointer declarator
+# & bitwise and operator
+# & address of operator
 # Can of worms: overloaded operator symbols
 
 # Simplistic CPP line syntax:
@@ -150,8 +152,8 @@ BEGIN {
 }
 
 # Collect all tokens after the < till >.
-# Treat first (assume its an identifier) specially to get its coordinates.
-(state == 3 && $3 == "identifier") {
+# Treat first specially to get its coordinates.
+(state == 3 && ($3 == "identifier" || $3 == "keyword")) {
     id_lin=$1
     id_col=$2
     filename=$4
