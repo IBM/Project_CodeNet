@@ -52,6 +52,25 @@ extern int comment_token/*= 0*/;     // when 1 output comments as tokens
 extern int whitespace_token/*= 0*/;  // when 1 output adjacent white-space as a token
 extern int continuation_token/*= 0*/; // when 1 output line continuation pseudo-token
 
+enum TokenClass {
+  /* 0*/ IDENTIFIER,
+  /* 1*/ KEYWORD,
+  /* 2*/ STRING,
+  /* 3*/ CHARACTER,
+  /* 4*/ INTEGER,
+  /* 5*/ FLOATING,
+  /* 6*/ OPERATOR,
+  /* 7*/ PREPROCESSOR,
+  /* 8*/ LINE_COMMENT,
+  /* 9*/ BLOCK_COMMENT,
+  /*10*/ WHITESPACE,
+  /*11*/ NEWLINE,
+  /*12*/ CONTINUATION,
+  /*13*/ FILENAME
+};
+
+extern const char *token_class[];
+
 // keyword lookup function (pointer variable):
 // (initialized by set_or_detect_lang())
 extern const char *(*is_keyword)(const char *);
@@ -62,7 +81,10 @@ extern Language set_or_detect_lang(const char *source);
 extern const char *lang_name(Language lang);
 extern int open_as_stdin(const char *file);
 
-extern unsigned C_tokenize(const char **token, const char **type, unsigned *line, unsigned *col);
+extern unsigned C_tokenize_int(const char **token, enum TokenClass *type,
+			       unsigned *line, unsigned *col);
+extern unsigned C_tokenize(const char **token, const char **type,
+			   unsigned *line, unsigned *col);
 
 extern void  RAW_escape(FILE *out, const char *token);
 extern void  CSV_escape(FILE *out, const char *token);

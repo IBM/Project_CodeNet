@@ -33,6 +33,24 @@ int continuation_token = 0;  // when 1 output line continuation pseudo-token
 
 static int logical_lines = 0;     // when 1 ignore line continuations in get)
 
+// Must be synced with enum TokenClass!
+const char *token_class[] = {
+  /* 0*/ "identifier",
+  /* 1*/ "keyword",
+  /* 2*/ "string",
+  /* 3*/ "character",
+  /* 4*/ "integer",
+  /* 5*/ "floating",
+  /* 6*/ "operator",
+  /* 7*/ "preprocessor",
+  /* 8*/ "line_comment",
+  /* 9*/ "block_comment",
+  /*10*/ "whitespace",
+  /*11*/ "newline",
+  /*12*/ "continuation",
+  /*13*/ "filename"
+};
+
 /* No longer using perfect hash function but simple binary search. */
 
 /* C11 n1570.pdf 6.4.1 (44)
@@ -503,11 +521,12 @@ static void token_buf_close(void)
    Returns 0 upon EOF else the token length in bytes.
    (There are no 0-length tokens!)
 */
-unsigned C_tokenize(const char **token, const char **type,
-                    unsigned *line, unsigned *col)
+
+unsigned C_tokenize_int(const char **token, enum TokenClass *type,
+			       unsigned *line, unsigned *col)
 {
   int cc;
-  *type = "";
+  *type = 0;
 
   do { // infinite loop; after token recognized breaks out.
     // Start collecting a token.
@@ -537,7 +556,7 @@ unsigned C_tokenize(const char **token, const char **type,
     if (cc == '\n' && newline_token) { // end of a logical line
       // Here we assume the buf is empty.
       token_buf_push(cc);
-      *type = "newline";
+      *type = NEWLINE;
       break;
     }
 
@@ -545,7 +564,7 @@ unsigned C_tokenize(const char **token, const char **type,
       // Here we assume the buf is empty.
       token_buf_push('\\');
       token_buf_push('\n');
-      *type = "continuation";
+      *type = CONTINUATION;
       break;
     }
 
@@ -571,7 +590,7 @@ unsigned C_tokenize(const char **token, const char **type,
 	if (whitespace_token) {
 	  // Undo lookahead (unget(EOF) has no effect!):
 	  unget(cc); // next token will be newline
-	  *type = "whitespace";
+	  *type = WHITESPACE;
 	  token_buf_close();
 	  *token = token_buf;
 	  return token_len;
@@ -585,7 +604,7 @@ unsigned C_tokenize(const char **token, const char **type,
 	if (whitespace_token) {
 	  // Undo lookahead (unget(EOF) has no effect!):
 	  unget(cc); // next token will be continuation
-	  *type = "whitespace";
+	  *type = WHITESPACE;
 	  token_buf_close();
 	  *token = token_buf;
 	  return token_len;
@@ -599,7 +618,7 @@ unsigned C_tokenize(const char **token, const char **type,
     if (whitespace_token && token_len) {
       // Undo lookahead (unget(EOF) has no effect!):
       unget(cc);
-      *type = "whitespace";
+      *type = WHITESPACE;
       break;
     }
 
@@ -630,7 +649,7 @@ unsigned C_tokenize(const char **token, const char **type,
       if (comment_token) {
 	// Undo lookahead (unget(EOF) has no effect!):
         unget(cc);
-        *type = "line_comment";
+        *type = LINE_COMMENT;
         break;
       }
       *line = linenr-1;
@@ -656,7 +675,7 @@ unsigned C_tokenize(const char **token, const char **type,
         if (comment_token) {
 	  // Undo lookahead (unget(EOF) has no effect!):
           unget(cc);
-          *type = "line_comment";
+          *type = LINE_COMMENT;
           break;
         }
 	*line = linenr-1;
@@ -689,7 +708,7 @@ unsigned C_tokenize(const char **token, const char **type,
         // cc == '*' && nc == '/'
         // Don't consider char right after */ as part of comment.
         if (comment_token) {
-          *type = "block_comment";
+          *type = BLOCK_COMMENT;
           break;
         }
 	*line = linenr;
@@ -736,7 +755,7 @@ unsigned C_tokenize(const char **token, const char **type,
         token_buf_push(cc);
       unget(cc);
       token_buf_close();
-      *type = is_keyword(token_buf) ? "keyword" : "identifier";
+      *type = is_keyword(token_buf) ? KEYWORD : IDENTIFIER;
       break;
     }
 
@@ -847,7 +866,7 @@ unsigned C_tokenize(const char **token, const char **type,
             token_buf_push(cc);
           else
             unget(cc);
-          *type = "floating";
+          *type = FLOATING;
           break;
         }
       }
@@ -887,7 +906,7 @@ unsigned C_tokenize(const char **token, const char **type,
       }
       else
         unget(cc);
-      *type = "integer";
+      *type = INTEGER;
       break;
     }
 
@@ -920,7 +939,7 @@ unsigned C_tokenize(const char **token, const char **type,
       }
       // cc == '"'
       token_buf_push(cc);
-      *type = "string";
+      *type = STRING;
       break;
     }
 
@@ -938,7 +957,7 @@ unsigned C_tokenize(const char **token, const char **type,
 		filename, linenr);
 	// Output as token anyway, but count as illegal:
 	token_buf_push(cc);
-	*type = "character";
+	*type = CHARACTER;
 	illegals++;
 	break;
       }
@@ -990,7 +1009,7 @@ unsigned C_tokenize(const char **token, const char **type,
 	token_buf_push(cc);
       else
 	unget(cc);
-      *type = "character";
+      *type = CHARACTER;
       break;
     }
 
@@ -1031,7 +1050,7 @@ unsigned C_tokenize(const char **token, const char **type,
 
     if (strstr("{}[]();?~,@", token_buf)) { // allow @ for Java
       // Single char operator/punctuator.
-      *type = "operator";
+      *type = OPERATOR;
       break;
     }
 
@@ -1058,7 +1077,7 @@ unsigned C_tokenize(const char **token, const char **type,
             else
               unget(c4);
               //token=[>,>,>,0];len=3
-            *type = "operator";
+            *type = OPERATOR;
             break;
           }
           //token=[cc,c2,c3,0];len=3
@@ -1069,7 +1088,7 @@ unsigned C_tokenize(const char **token, const char **type,
               !strcmp("<<=", token_buf) ||
               !strcmp(">>=", token_buf)) {
             // Triple char operator/punctuator.
-            *type = "operator";
+            *type = OPERATOR;
             break;
           }
 
@@ -1097,7 +1116,7 @@ unsigned C_tokenize(const char **token, const char **type,
           if (!strcmp(ops2[i], token_buf))
             break;
         if (i < size) {
-          *type = "operator";
+          *type = OPERATOR;
           break;
         }
         //token=[cc,c2,0];len=2
@@ -1111,7 +1130,7 @@ unsigned C_tokenize(const char **token, const char **type,
 
       // Must be single char.
       unget(c2);
-      *type = "operator";
+      *type = OPERATOR;
       break;
     }
     //token=[cc,0];len=1
@@ -1124,7 +1143,7 @@ unsigned C_tokenize(const char **token, const char **type,
         unget(nc);
       else
         token_buf_push(nc);
-      *type = "preprocessor";
+      *type = PREPROCESSOR;
       break;
     }
 
@@ -1141,6 +1160,15 @@ unsigned C_tokenize(const char **token, const char **type,
   token_buf_close();
   *token = token_buf;
   return token_len;
+}
+
+unsigned C_tokenize(const char **token, const char **type,
+                    unsigned *line, unsigned *col)
+{
+  enum TokenClass typeid;
+  unsigned result = C_tokenize_int(token, &typeid, line, col);
+  *type = token_class[typeid];
+  return result;
 }
 
 // Escape hard newlines in a string.

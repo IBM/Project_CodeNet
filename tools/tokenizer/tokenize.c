@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
   char usage_str[80];
 
   const char *token;
-  const char *type;
+  enum TokenClass type;
   unsigned line;
   unsigned col;
   unsigned token_len;
@@ -316,28 +316,27 @@ fputs(
       break;
     }
 
-    while ((token_len = C_tokenize(&token, &type, &line, &col))) {
+    while ((token_len = C_tokenize_int(&token, &type, &line, &col))) {
       switch (mode) {
       case RAW:
         fputs(token, stdout);
         fputc('\n', stdout);
         break;
       case PLAIN:
-        fprintf(stdout, "(%4u,%3u) %s: %s\n", line, col, type, token);
+        fprintf(stdout, "(%4u,%3u) %s: %s\n",
+		line, col, token_class[type], token);
         break;
       case CSV:
         // Escape , " in token
         // csvkit treats . as null fields even as ".".
-        fprintf(stdout, "%u,%u,%s,", line, col, type);
-        if (!strcmp(type, "string") ||
+        fprintf(stdout, "%u,%u,%s,", line, col, token_class[type]);
+        if (type == STRING ||
             // Do we need this too? Yes!
-            !strcmp(type, "character") && strchr(token, '"') ||
-            !strcmp(type, "character") && strchr(token, ',') ||
-            !strcmp(type, "whitespace") && strchr(token, '\n') ||
-            !strcmp(type, "newline") ||
-            !strcmp(type, "continuation") ||
-            comment_token && (!strcmp(type, "line_comment") ||
-                              !strcmp(type, "block_comment")))
+	    type == CHARACTER && (strchr(token, '"') || strchr(token, ',')) ||
+            type == WHITESPACE && strchr(token, '\n') ||
+            type == NEWLINE ||
+            type == CONTINUATION ||
+            comment_token && (type == LINE_COMMENT || type == BLOCK_COMMENT))
           CSV_escape(stdout, token);
         else if (!strcmp(token, ","))
           fputs("\",\"", stdout);
@@ -356,11 +355,11 @@ fputs(
         fprintf(stdout,
                 "{ \"line\": %u, \"column\": %u, "
                 "\"class\": \"%s\", \"length\": %u, \"token\": \"",
-                line, col, type, token_len);
+                line, col, token_class[type], token_len);
         // token value is always a JSON string.
-        if (!strcmp(type, "string") || !strcmp(type, "character") ||
-            !strcmp(type, "newline") || !strcmp(type, "whitespace") ||
-            !strcmp(type, "continuation"))
+        if (type == STRING  || type == CHARACTER ||
+            type == NEWLINE || type == WHITESPACE ||
+            type == CONTINUATION)
           JSON_escape(stdout, token);
         else
           fputs(token, stdout);
@@ -368,12 +367,12 @@ fputs(
         break;
       case XML:
         fprintf(stdout, "<token line='%u' column='%u' class='%s' length='%u'>",
-                line, col, type, token_len);
-            if (!strcmp(type, "string") ||
-                !strcmp(type, "character") ||
-                !strcmp(type, "operator") ||
-                comment_token && (!strcmp(type, "line_comment") ||
-                                  !strcmp(type, "block_comment")))
+                line, col, token_class[type], token_len);
+	if (type == STRING ||
+	    type == CHARACTER ||
+	    type == OPERATOR ||
+	    comment_token && (type == LINE_COMMENT ||
+			      type == BLOCK_COMMENT))
           XML_escape(stdout, token);
         else
           fputs(token, stdout);
