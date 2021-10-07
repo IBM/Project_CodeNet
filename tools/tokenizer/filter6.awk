@@ -194,7 +194,7 @@ BEGIN {
 }
 
 # Handle #define name.
-(state == 7 && $3 == "identifier") {
+(state == 7 && ($3 == "identifier" || $3 == "keyword")) {
     id_lin=$1
     id_col=$2
     macro_name=$4
