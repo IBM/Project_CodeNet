@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
   char usage_str[80];
 
   const char *token;
-  const char *type;
+  enum TokenClass type;
   unsigned line;
   unsigned col;
   unsigned token_len;
@@ -171,22 +171,22 @@ fputs(
 	      lang_name(source), filename);
     }
 
-    while ((token_len = C_tokenize(&token, &type, &line, &col))) {
-      if (!strcmp(type, "whitespace")) {
+    while ((token_len = C_tokenize_int(&token, &type, &line, &col))) {
+      if (type == WHITESPACE) {
 	fputs(token, stdout);
 	continue;
       }
       fprintf(stdout, "<%s line='%u' col='%u' len='%u'>",
-	      type, line, col, token_len);
-      if (!strcmp(type, "string")
-	  || !strcmp(type, "character")
-	  || !strcmp(type, "operator")
-	  || !strcmp(type, "line_comment")
-	  || !strcmp(type, "block_comment"))
+	      token_class[type], line, col, token_len);
+      if (type == STRING ||
+	  type == CHARACTER ||
+	  type == OPERATOR ||
+	  type == LINE_COMMENT ||
+	  type == BLOCK_COMMENT)
 	XML_escape(stdout, token);
       else
 	fputs(token, stdout);
-      fprintf(stdout, "</%s>", type);
+      fprintf(stdout, "</%s>", token_class[type]);
     }
 
     if (!continuous_files) {
