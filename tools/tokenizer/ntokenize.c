@@ -56,8 +56,8 @@
 #define ws_RE           "[ \t\v\f\n]*"
 
 // 96 chars (omitted are e.g.: @ $ `)
-//                                     3  5  67         8         9       9
-//                        1234 5 6 7   3  9  9012345678901234567890123 4 56
+//                                     33 56 67         8         9       9
+//                        1234 5 6 7 8 34 90 9012345678901234567890123 4 56
 #define basic_char0_RE  "[][ \t\v\f\na-zA-Z0-9_{}#()<>%:;.?*+/^&|~!=,\\\"'-]"
 
 // all basic chars except \n and >
@@ -247,10 +247,10 @@ int normalize_newline(void)
       char_count++; // counts the carriage return
       utf8_count++;
       // No use incrementing column.
-      return nc; // effectively skip the \r
+      return nc; // return \n; effectively skipping the \r
     }
-    // Mind nc not \n.
-    if (nc != EOF) ungetc(nc, stdin);
+    // Mind nc not \n. ungetc(EOF) is Okay.
+    ungetc(nc, stdin);
     // cc == '\r'; consider a newline as well, so turn into \n:
     cc = '\n';
   }
@@ -265,15 +265,15 @@ int get(void)
   int cc;
  restart:
   // Read a fresh char:
-  cc = normalize_newline();
+  cc = normalize_newline(); // cc != '\r'
   if (cc == EOF) return EOF;
   char_count++;
   if (utf8_start(cc)) utf8_count++;
 
-  if (cc == '\n') {
+  if (cc == '\n') { // a normalized end-of-line (\r|\r?\n)
     linenr++;
     column = 0;
-    return cc;
+    return cc; // \n here signals a logical end-of-line
   }
 
   // Deal with \ line continuations!
@@ -290,8 +290,8 @@ int get(void)
       // Could again start a line continuation!
       goto restart;
     }
-    // Mind nc not \n.
-    if (nc != EOF) ungetc(nc, stdin);
+    // Mind nc not \n. ungetc(EOF) is Okay.
+    ungetc(nc, stdin);
     // cc == '\\' a regular backslash
   }
   column++;
