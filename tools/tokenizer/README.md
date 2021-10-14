@@ -20,6 +20,7 @@ The following lexeme classes are recognized:
 - single-quoted character literal
 - all single, double, and triple operator and punctuation symbols
 - the preprocessor tokens # and ##
+- a number of pseudo tokens depending on selected options
 
 For each correctly recognized token, the program determines its class/type and
 the exact coordinates (line number and column) in the input text of
@@ -30,8 +31,8 @@ A newline is defined as a single linefeed character `\n`, a carriage return
 `\r`, or the combination carriage return `\r` followed by linefeed `\n`.
 Line continuations, i.e., a backslash immediately followed by a newline, are handled
 at the character input level, so the token recognizers will only see logical
-lines. Line and column coordinates reflect positions in the physical line
-structure, not the logical one. When requested, logical line endings are
+lines. Line and column coordinates however reflect positions in the physical line
+structure, not the logical one. When so requested, logical line endings are
 output as `newline` pseudo tokens and will be represented by a linefeed
 character. Similarly, when requested, continuations are output as
 `continuation` pseudo tokens and will be represented by a backslash-escaped
@@ -208,9 +209,10 @@ line,column,class,token
 ```
 
 The operator token `,` is escaped with double quotes, like so `","`.
-String tokens are escaped as well and any original double quote is doubled.
+String tokens are always escaped and any original double quote is doubled.
 A newline on its own or as part of whitespace will appear escaped as `\n`.
-A whitespace token text will appear inside double quotes.
+A whitespace token text will appear inside double quotes. A continuation token
+will appear as `"\\n"`.
 
 ### JSON output
 
