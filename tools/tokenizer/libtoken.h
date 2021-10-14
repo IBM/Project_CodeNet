@@ -70,7 +70,8 @@ enum TokenClass {
   /*10*/ WHITESPACE,
   /*11*/ NEWLINE,
   /*12*/ CONTINUATION,
-  /*13*/ FILENAME
+  /*13*/ FILENAME,
+  /*14*/ ENDOFFILE
 };
 
 extern const char *token_class[];

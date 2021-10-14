@@ -48,7 +48,8 @@ const char *token_class[] = {
   /*10*/ "whitespace",
   /*11*/ "newline",
   /*12*/ "continuation",
-  /*13*/ "filename"
+  /*13*/ "filename",
+  /*14*/ "endoffile"
 };
 
 /* No longer using perfect hash function but simple binary search. */
@@ -446,12 +447,6 @@ static char *token_buf = 0;
 static unsigned token_alloc = 0;
 static unsigned token_len = 0;
 
-// Resets the token buffer cursor.
-static void token_buf_reset(void)
-{
-  token_len = 0;
-}
-
 // Makes sure there is room in the token buffer.
 static void token_buf_room(void)
 {
@@ -496,6 +491,12 @@ static void token_buf_close(void)
   token_buf[token_len] = '\0'; // Note: no advance
 }
 
+// Resets the token buffer cursor.
+static void token_buf_reset(void)
+{
+  token_len = 0;
+}
+
 /* Tokenization of C++ programming language source text.
    Recognizes:
    - identifier
@@ -520,13 +521,19 @@ static void token_buf_close(void)
 
    Returns 0 upon EOF else the token length in bytes.
    (There are no 0-length tokens!)
+   EOF may be interpreted as a token. The function then returns:
+   token = "", type = endoffile, line and col correctly defined.
+
+   An unexpected EOF is the middle of a token will cause an error message
+   and the partial token to be output first before a next call returns 0
+   (to indicate the EOF condition).
 */
 
 unsigned C_tokenize_int(const char **token, enum TokenClass *type,
 			       unsigned *line, unsigned *col)
 {
   int cc;
-  *type = 0;
+  *type = ENDOFFILE;
 
   do { // infinite loop; after token recognized breaks out.
     // Start collecting a token.
@@ -622,8 +629,10 @@ unsigned C_tokenize_int(const char **token, enum TokenClass *type,
       break;
     }
 
-    if (cc == EOF)
-      return 0;
+    if (cc == EOF) {
+      token_buf_reset();
+      break;
+    }
 
     // Rest of tokens treat line continuations as non-existent:
     logical_lines = 1;
@@ -700,7 +709,14 @@ unsigned C_tokenize_int(const char **token, enum TokenClass *type,
                     "(E): [%s:%u] Unexpected end-of-file in /* comment.\n",
                     filename, *line);
             unexpect_eof++;
-            return 0;
+	    if (comment_token)
+	      // Better return partial comment as token and postpone EOF:
+	      *type = BLOCK_COMMENT;
+	    else
+	      token_buf_reset();
+	    token_buf_close();
+	    *token = token_buf;
+            return token_len;
           }
           if (comment_token)
             token_buf_push(nc);
@@ -923,7 +939,11 @@ unsigned C_tokenize_int(const char **token, enum TokenClass *type,
                   "(E): [%s:%u] Unexpected end-of-file in string literal.\n",
                   filename, *line);
           unexpect_eof++;
-          return 0;
+	  // Better return partial string as token and postpone EOF:
+	  *type = STRING;
+	  token_buf_close();
+	  *token = token_buf;
+	  return token_len;
         }
         token_buf_push(cc);
         int nc = get();
@@ -969,8 +989,11 @@ unsigned C_tokenize_int(const char **token, enum TokenClass *type,
                   "(E): [%s:%u] Unexpected end-of-file in character literal.\n",
                   filename, linenr);
           unexpect_eof++;
-	  // Note: partial character literal is lost.
-          return 0;
+	  // Better return partial character as token and postpone EOF:
+	  *type = CHARACTER;
+	  token_buf_close();
+	  *token = token_buf;
+	  return token_len;
         }
         if (cc == '\n') { // Error!
           fprintf(stderr,
