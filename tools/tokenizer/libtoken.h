@@ -13,6 +13,10 @@
 #include <ctype.h>
 #include <string.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define MAX_BUF       8  // maximum lookahead in chars
 
 /* Let's assume UTF-8 encoding.
@@ -90,5 +94,9 @@ extern void  RAW_escape(FILE *out, const char *token);
 extern void  CSV_escape(FILE *out, const char *token);
 extern void JSON_escape(FILE *out, const char *token);
 extern void  XML_escape(FILE *out, const char *token);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* LIBTOKEN_H */
