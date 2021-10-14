@@ -524,7 +524,7 @@ static void token_buf_reset(void)
    EOF may be interpreted as a token. The function then returns:
    token = "", type = endoffile, line and col correctly defined.
 
-   An unexpected EOF is the middle of a token will cause an error message
+   An unexpected EOF in the middle of a token will cause an error message
    and the partial token to be output first before a next call returns 0
    (to indicate the EOF condition).
 */
@@ -592,31 +592,18 @@ unsigned C_tokenize_int(const char **token, enum TokenClass *type,
       // Here: whitespace_token implies token_len > 0
 
       cc = get();
-      if (cc == '\n' && newline_token) {
+      if (cc == '\n' && newline_token ||
+	  cc == '\r' && continuation_token) {
 	// Must issue whitespace token if so requested.
 	if (whitespace_token) {
 	  // Undo lookahead (unget(EOF) has no effect!):
-	  unget(cc); // next token will be newline
+	  unget(cc); // next token will be newline/continuation
 	  *type = WHITESPACE;
 	  token_buf_close();
 	  *token = token_buf;
 	  return token_len;
 	}
-	// Issue newline token right away:
-	goto restart;
-      }
-
-      if (cc == '\r' && continuation_token) {
-	// Must issue whitespace token if so requested.
-	if (whitespace_token) {
-	  // Undo lookahead (unget(EOF) has no effect!):
-	  unget(cc); // next token will be continuation
-	  *type = WHITESPACE;
-	  token_buf_close();
-	  *token = token_buf;
-	  return token_len;
-	}
-	// Issue continuation token right away:
+	// Issue newline/continuation token right away:
 	goto restart;
       }
     }
