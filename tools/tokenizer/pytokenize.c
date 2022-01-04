@@ -1,7 +1,7 @@
 /* Copyright (c) 2021 International Business Machines Corporation
    Prepared by: Geert Janssen <geert@us.ibm.com>
 
-   Tokenizer for Python 3.
+   Tokenizer for Python 3.x
 
    Token classes:
    - identifier
@@ -33,7 +33,7 @@
 // Program globals:
 static unsigned brackets_opened = 0; // unpaired nested ( [ { seen
 static int prev_was_newline = 1;     // no previous token or was newline
-static int first_time = 1;
+static int first_time = 1;	     // control add , for JSON and JSONL
 
 // Program option settings:
 static int start_token = 0;       // when 1 start filename pseudo-token
@@ -51,7 +51,7 @@ static const char *keywords[] = {
 
 static const unsigned num_keywords = sizeof(keywords)/sizeof(keywords[0]);
 
-static void emit(const char *s, unsigned line,  unsigned col)
+static void emit(const char *s, unsigned line, unsigned col)
 {
   if (output_layout) {
     switch (mode) {
@@ -100,7 +100,7 @@ static void process_newline(unsigned indent)
 {
   emit("NEWLINE", linenr-1, saved_col);
 
-  unsigned last_indent = indents_top();
+  unsigned last_indent = indents_top(); // maybe 0
 
   if (indent > last_indent) {
     indents_push(indent);
@@ -116,11 +116,12 @@ static void process_newline(unsigned indent)
     } while (indent < indents_top());
     // Here: empty() || indent >= top()
     if (indent > indents_top() && !nowarn)
-      fprintf(stderr, "(W): incorrect indentation.\n");
+      fprintf(stderr, "(W): Incorrect indentation.\n");
   }
   // else: indent == last_indent: no action
 }
 
+// cc in [ \t\f]
 static int process_ws(int cc)
 {
   // Collect white-space and compute possible indentation:
@@ -288,8 +289,11 @@ static int tokenize(char *token, const char **type,
         ;
       // cc == '\n' || cc == '\r' || cc == EOF
       if (cc == '\r') {
-        if (!nowarn)
-        fprintf(stderr, "(W): Comment may not be continued with \\.\n");
+	// presumably a \ may occur in a comment as last char before \n
+        /*
+	  if (!nowarn)
+	  fprintf(stderr, "(W): Comment may not be continued with \\.\n");
+	*/
         // Effectively ignore any \ and terminate logical line:
         cc == '\n';
       }
@@ -885,7 +889,7 @@ fputs(
 
     case '?':
     default:
-      fputs("(F): unknown option. Stop.\n", stderr);
+      fputs("(F): Unknown option. Stop.\n", stderr);
       fprintf(stderr, usage_str, argv[0]);
       return 1;
     }
@@ -893,7 +897,7 @@ fputs(
 
   if (outfile && outfile[0]) {
     if (!freopen(outfile, "w", stdout)) {
-      fprintf(stderr, "(F): cannot open %s for writing.\n", outfile);
+      fprintf(stderr, "(F): Cannot open %s for writing.\n", outfile);
       exit(3);
     }
   }
@@ -905,7 +909,7 @@ fputs(
     filename = argv[optind];
     if (!freopen(filename, "r", stdin)) {
       if (!nowarn)
-      fprintf(stderr, "(W): Cannot read file %s.\n", filename);
+      fprintf(stderr, "(W): Cannot read file %s; skipped.\n", filename);
       continue;
     }
 
