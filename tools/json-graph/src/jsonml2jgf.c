@@ -94,7 +94,7 @@ static void det_coords_adjust_labels(Graph g)
     for (p = start; p < end; ++p)
       if (isspace(*p))
 	n->label->start++;
-      else if (*p == '\\' && (*p == 'n' || *p == 't')) {
+      else if (*p == '\\' && (*(p+1) == 'n' || *(p+1) == 't')) {
 	n->label->start += 2;
 	++p;
       }
