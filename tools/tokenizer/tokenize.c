@@ -1,4 +1,4 @@
-/* Copyright (c) 2021 International Business Machines Corporation
+/* Copyright (c) 2021, 2022 International Business Machines Corporation
    Prepared by: Geert Janssen <geert@us.ibm.com>
 
    Simple C/C++ and Java Tokenizer.
@@ -122,6 +122,7 @@ int main(int argc, char *argv[])
   Language source;
   int explicit_source = 0;
   int append = 0;
+  int suppress_newline = 0;
 
   sprintf(usage_str, "usage: %%s [ -%s ] [ FILES ]\n", opt_str);
 
@@ -164,6 +165,7 @@ fputs(
 "-n       : output newlines as a special pseudo token.\n"
 "-N       : output line continuations as a special pseudo token.\n"
 "-o<file> : write output to this file (instead of stdout).\n"
+"-r       : suppress newline after each token in raw mode.\n"
 "-s       : enable a special start token specifying the filename.\n"
 "-1       : treat all filename arguments as a continuous single input.\n"
 "-v       : print action summary to stderr.\n"
@@ -216,6 +218,10 @@ fputs(
 
     case 'o':
       outfile = optarg;
+      break;
+
+    case 'r':
+      suppress_newline = 1;
       break;
 
     case 's':
@@ -320,7 +326,7 @@ fputs(
       switch (mode) {
       case RAW:
         fputs(token, stdout);
-        fputc('\n', stdout);
+        if (!suppress_newline) fputc('\n', stdout);
         break;
       case PLAIN:
         fprintf(stdout, "(%4u,%3u) %s: %s\n",
