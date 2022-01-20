@@ -62,7 +62,6 @@ int main(int argc, char *argv[])
   int continuous_files = 0;  // when 1 do not reset after each file
 
   char *outfile = 0;
-  int first_time = 1;
   Language source;
   int explicit_source = 0;
   int append = 0;
@@ -204,7 +203,6 @@ fputs(
       column = 0;
       buffered = 0;
       saved_col = 0;
-      first_time = 1;
     }
   } while (++optind < argc);
 
