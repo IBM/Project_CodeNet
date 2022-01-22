@@ -327,6 +327,7 @@ int get(void)
   // Get the next character:
   if (buffered) { // chars available in lookahead buffer
     cc = buffer[--buffered]; // never EOF
+    char_count++;
     // cc maybe '\r' (line continuation); act like '\n':
     if (cc == '\n' || cc == '\r') {
       linenr++;
@@ -395,6 +396,7 @@ void unget(int cc)
     }
     else
       column--;
+    char_count--;
     buffer[buffered++] = cc;
   }
   else {
