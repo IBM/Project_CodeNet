@@ -1,4 +1,4 @@
-/* Copyright (c) 2021 International Business Machines Corporation
+/* Copyright (c) 2021, 2022 International Business Machines Corporation
    Prepared by: Geert Janssen <geert@us.ibm.com>
 
    Tokenizer for C, C++ and Java with output as annotated XML,
@@ -19,10 +19,10 @@
    The characters <, >, and & will be replaced by the special XML entities
    &lt;, &gt; and &amp; respectively.
 
-   To undo the XML annotation use either:
+   To undo the XML annotation in <file>.xml use either:
    (this will also correctly revert the XML entities)
-   xmlstarlet sel -T -t -v 'source' libtoken.xml
-   xidel -s -e 'source'
+   xmlstarlet sel -T -t -v 'source' <file>.xml, or
+   xidel -s -e 'source' <file>.xml
 
    Useful xpath queries:
    (the results show all occurrences and these are not necessarily unique)
@@ -57,6 +57,7 @@ int main(int argc, char *argv[])
   enum TokenClass type;
   unsigned line;
   unsigned col;
+  unsigned pos;
   unsigned token_len;
   unsigned num_files = 0;    // number of files read
   int continuous_files = 0;  // when 1 do not reset after each file
@@ -170,7 +171,7 @@ fputs(
 	      lang_name(source), filename);
     }
 
-    while ((token_len = C_tokenize_int(&token, &type, &line, &col))) {
+    while ((token_len = C_tokenize_int(&token, &type, &line, &col, &pos))) {
       if (type == WHITESPACE) {
 	fputs(token, stdout);
 	continue;

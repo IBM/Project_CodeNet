@@ -111,6 +111,7 @@ int main(int argc, char *argv[])
   enum TokenClass type;
   unsigned line;
   unsigned col;
+  unsigned pos;
   unsigned token_len;
   unsigned num_files = 0;    // number of files read
   int start_token = 0;       // when 1 start filename pseudo-token
@@ -322,15 +323,15 @@ fputs(
       break;
     }
 
-    while ((token_len = C_tokenize_int(&token, &type, &line, &col))) {
+    while ((token_len = C_tokenize_int(&token, &type, &line, &col, &pos))) {
       switch (mode) {
       case RAW:
         fputs(token, stdout);
         if (!suppress_newline) fputc('\n', stdout);
         break;
       case PLAIN:
-        fprintf(stdout, "(%4u,%3u) %s: %s\n",
-		line, col, token_class[type], token);
+        fprintf(stdout, "(%4u,%3u;%6u:%3u) %s: %s\n",
+		line, col, pos, token_len, token_class[type], token);
         break;
       case CSV:
         // Escape , " in token

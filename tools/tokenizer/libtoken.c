@@ -1,4 +1,4 @@
-/* Copyright (c) 2021 International Business Machines Corporation
+/* Copyright (c) 2021, 2022 International Business Machines Corporation
    Prepared by: Geert Janssen <geert@us.ibm.com>
 
    Code functionality shared by all tokenizers.
@@ -530,7 +530,7 @@ static void token_buf_reset(void)
 */
 
 unsigned C_tokenize_int(const char **token, enum TokenClass *type,
-			       unsigned *line, unsigned *col)
+			unsigned *line, unsigned *col, unsigned *pos)
 {
   int cc;
   *type = ENDOFFILE;
@@ -540,6 +540,7 @@ unsigned C_tokenize_int(const char **token, enum TokenClass *type,
     token_buf_reset();
     *line = linenr;
     *col = column;
+    *pos = char_count;
     // white-space tokens see continuation lines:
     logical_lines = 0;
     cc = get();
@@ -627,6 +628,7 @@ unsigned C_tokenize_int(const char **token, enum TokenClass *type,
     // If white-space skipped must reset coordinates:
     *line = linenr;
     *col = column-1;
+    *pos = char_count-1;
 
     /*** OPTIONAL # LINE COMMENT (to ignore preprocessor statements) ***/
     // Java: no preprocessor directives.
@@ -650,6 +652,7 @@ unsigned C_tokenize_int(const char **token, enum TokenClass *type,
       }
       *line = linenr-1;
       *col = saved_col;
+      *pos = char_count;
       goto restart;
     }
 
@@ -676,6 +679,7 @@ unsigned C_tokenize_int(const char **token, enum TokenClass *type,
         }
 	*line = linenr-1;
 	*col = saved_col;
+	*pos = char_count;
         goto restart;
       }
 
@@ -716,6 +720,7 @@ unsigned C_tokenize_int(const char **token, enum TokenClass *type,
         }
 	*line = linenr;
 	*col = column;
+	*pos = char_count;
         cc = get();
         goto restart;
       }
@@ -727,6 +732,7 @@ unsigned C_tokenize_int(const char **token, enum TokenClass *type,
     // If white-space and/or comments skipped must reset coordinates:
     *line = linenr;
     *col = column-1;
+    *pos = char_count-1;
 
     /*** CHAR and STRING PREFIX (C/C++) ***/
 
@@ -1173,10 +1179,10 @@ unsigned C_tokenize_int(const char **token, enum TokenClass *type,
 }
 
 unsigned C_tokenize(const char **token, const char **type,
-                    unsigned *line, unsigned *col)
+                    unsigned *line, unsigned *col, unsigned *pos)
 {
   enum TokenClass typeid;
-  unsigned result = C_tokenize_int(token, &typeid, line, col);
+  unsigned result = C_tokenize_int(token, &typeid, line, col, pos);
   *type = token_class[typeid];
   return result;
 }

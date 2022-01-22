@@ -1,4 +1,4 @@
-/* Copyright (c) 2021 International Business Machines Corporation
+/* Copyright (c) 2021, 2022 International Business Machines Corporation
    Prepared by: Geert Janssen <geert@us.ibm.com>
 
    Code functionality shared by all tokenizers.
@@ -87,9 +87,9 @@ extern const char *lang_name(Language lang);
 extern int open_as_stdin(const char *file);
 
 extern unsigned C_tokenize_int(const char **token, enum TokenClass *type,
-			       unsigned *line, unsigned *col);
+			       unsigned *line, unsigned *col, unsigned *pos);
 extern unsigned C_tokenize(const char **token, const char **type,
-			   unsigned *line, unsigned *col);
+			   unsigned *line, unsigned *col, unsigned *pos);
 
 extern void  RAW_escape(FILE *out, const char *token);
 extern void  CSV_escape(FILE *out, const char *token);
