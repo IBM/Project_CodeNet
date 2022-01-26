@@ -179,23 +179,25 @@ TRANSFORMATIONS:
 For instance, the XML markup can be enhanced with line and column coordinates.
 Notice also that srcML has built-in capabilities to query and manipulate the
 XML. Queries can be done with XPath expressions. General transformations can
-be executed with XSLT.
+be executed with XSLT. By the way, there is no need to first convert the
+source to XML; the built-in queries capabilities work also directly off the
+source code.
 
 Here are a few examples of useful operations:
 
 - Get all function and method definition names:
 ```console
-$ srcml --xpath="//src:function/src:name" program.xml
+$ srcml --xpath="//src:function/src:name" program.java
 ```
 
 - Count the number of conditions:
 ```console
-$ srcml --xpath='count(//src:condition)' program.xml
+$ srcml --xpath='count(//src:condition)' program.c
 ```
 
 - Output all line comments:
 ```console
-$ srcml --xpath='//src:comment[@type="line"]' program.xml
+$ srcml --xpath='//src:comment[@type="line"]' program.cpp
 ```
 
 Much more versatile and powerful tools to process any XML are
