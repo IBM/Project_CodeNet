@@ -1232,6 +1232,11 @@ void JSON_escape(FILE *out, const char *token)
       fputs("\\n", out);
       continue;
     }
+    if (*p == '\t') { // escape embedded real TABs
+      fputs("\\t", out);
+      continue;
+    }
+    // FIXME: control characters from U+0000 through U+001F must be escaped
     if (*p == '\\' || *p == '"')
       fputc('\\', out);
     fputc(*p, out);
