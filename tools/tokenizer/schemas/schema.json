@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "JSON Schema for Tokenizer JSON Output",
-  "description": "Prepared by Geert Janssen <geert@us.ibm.com>\nCopyright IBM Corporation 2020.",
+  "description": "Prepared by Geert Janssen <geert@us.ibm.com>\nCopyright IBM Corporation 2020, 2021.",
 
   "type": "array",
   "items": {
@@ -12,8 +12,10 @@
       "class": { "enum": [
         "identifier", "keyword", "integer", "floating",
         "string", "character", "operator", "preprocessor",
-	"filename"
+	"filename", "line_comment", "block_comment", "newline",
+	"continuation", "whitespace"
       ] },
+      "length": { "$ref": "#/definitions/unsignedInt" },
       "token": { "type": "string" }
     },
     "required": [ "line", "column", "class", "token" ],

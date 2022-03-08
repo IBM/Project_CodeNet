@@ -45,9 +45,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <regex.h>
-#include <unistd.h>		/* getopt() */
-#include <libgen.h>		/* basename() */
-#include <ctype.h>		/* tolower() */
+#include <unistd.h>             /* getopt() */
+#include <libgen.h>             /* basename() */
+#include <ctype.h>              /* tolower() */
 
 // POSIX Extended Regular Expressions for all parts of token output.
 
@@ -87,15 +87,15 @@
   class_RE "),(channel=(" posint_RE "),)?(" line_RE "):(" column_RE ")\\]$"
 
 // Program option settings:
-static int debug = 0;		// when 1 debug output to stderr
+static int debug = 0;           // when 1 debug output to stderr
 static int verbose = 0;         // when 1 info output to stderr
-static int nowarn = 0;		// when 1 warnings are suppressed
-static int start_token = 0;	// when 1 start filename pseudo-token
+static int nowarn = 0;          // when 1 warnings are suppressed
+static int start_token = 0;     // when 1 start filename pseudo-token
 static int continuous_files = 0;// when 1 do not reset after each file
 
 // Program globals:
 static char *filename = "stdin";// current file being parsed
-static unsigned num_files = 0;	// number of files read
+static unsigned num_files = 0;  // number of files read
 static unsigned linenr = 1;     // line number counted from 1
 static enum { CSV, JSON, JSONL, RAW } mode = JSON;
 
@@ -179,10 +179,10 @@ static void JSON_escape(FILE *out, const char *p, unsigned len)
       const char peek = len ? *(p+1) : anything_but_valid_escape; // look ahead
       fputc('\\', out);
       if (strchr("\\\"bfnrt", peek)) {
-	// An valid JSON escape. Output it and skip peek:
-	c = peek;
-	p++;
-	len--;
+        // An valid JSON escape. Output it and skip peek:
+        c = peek;
+        p++;
+        len--;
       }
       //else Not a correct JSON escape, a standalone backslash; double it.
     }
@@ -214,7 +214,7 @@ static unsigned get(char const *text)
   if (regexec(re, text, nmatch, pmatch, REG_NOTEOL) == REG_NOMATCH) {
     // Warn about the failed match:
     fprintf(stderr, "(W) [%s:%u] not a valid token; skipped.\n",
-	    filename, linenr);
+            filename, linenr);
     // Cannot recover; no more input.
     return 0;
   }
@@ -256,22 +256,22 @@ static unsigned get(char const *text)
     case CLASS_IDENT:
       // CSV output does not need the quoting. 
       if (mode == JSON || mode == JSONL)
-	fputc('"', stdout);
+        fputc('"', stdout);
       // Undo the capitalization?
       fputc(tolower(*p), stdout);
       fwrite(p+1, 1, len-1, stdout);
       if (mode == JSON || mode == JSONL)
-	fputc('"', stdout);
+        fputc('"', stdout);
       break;
     case TEXT:
       // CSV output benefits from quoting; must escape the "
       fputc('"', stdout);
       // Strip off the enclosing single quotes.
       if (mode == JSON || mode == JSONL)
-	JSON_escape(stdout, p+1, len-2);
+        JSON_escape(stdout, p+1, len-2);
       else
       if (mode == CSV)
-	CSV_escape(stdout, p+1, len-2);
+        CSV_escape(stdout, p+1, len-2);
       fputc('"', stdout);
       break;
     case CLASS_STRING:
@@ -281,10 +281,10 @@ static unsigned get(char const *text)
       // Keep the enclosing single quotes!
       fputc('"', stdout);
       if (mode == JSON || mode == JSONL)
-	JSON_escape(stdout, p, len);
+        JSON_escape(stdout, p, len);
       else
       if (mode == CSV)
-	CSV_escape(stdout, p, len);
+        CSV_escape(stdout, p, len);
       fputc('"', stdout);
       break;
     case CHANNEL:
@@ -333,7 +333,7 @@ main(int argc, char *argv[])
 
     case 'h':
 fputs(
-"A converter for the ANTLR4 token output format.\n\n", stdout);
+"A converter for the ANTLR4 token output format.\n\n", stderr);
  fprintf(stderr, usage_str, basename(argv[0]));
 fputs(
 "\nCommand line options are:\n"
@@ -358,7 +358,7 @@ fputs(
       else if (!strcmp(optarg, "raw"))
         mode = RAW;
       else {
-	if (!nowarn)
+        if (!nowarn)
         fprintf(stderr, "(W): Invalid mode %s (using csv).\n", optarg);
         mode = CSV;
       }
@@ -419,10 +419,10 @@ fputs(
       break;
     case CSV:
       if (!continuous_files || num_files == 1)
-	fputs("seqnr,start,stop,text,class,channel,line,column\n", stdout);
+        fputs("seqnr,start,stop,text,class,channel,line,column\n", stdout);
       else {
-	fputc('\n', stdout);
-	first_time = 1;
+        fputc('\n', stdout);
+        first_time = 1;
       }
       if (start_token) {
         fprintf(stdout, "0,0,0,%s,File,0,1,0\n", filename);
@@ -431,20 +431,20 @@ fputs(
     case JSON:
     case JSONL:
       if (!continuous_files || num_files == 1) {
-	if (mode == JSON) fputs("[\n", stdout);
+        if (mode == JSON) fputs("[\n", stdout);
       }
       else {
-	if (mode == JSON) fputc(',', stdout);
-	fputc('\n', stdout);
-	first_time = 1;
+        if (mode == JSON) fputc(',', stdout);
+        fputc('\n', stdout);
+        first_time = 1;
       }
       if (start_token) {
-	// Must quote filename:
+        // Must quote filename:
         fprintf(stdout,
-	    "{\"seqnr\":0, \"start\":0, \"stop\":0, \"text\":\"%s\","
-	    " \"class\":\"File\", \"line\":1, \"column\":0}",
-		filename);
-	first_time = 0;
+            "{\"seqnr\":0, \"start\":0, \"stop\":0, \"text\":\"%s\","
+            " \"class\":\"File\", \"line\":1, \"column\":0}",
+                filename);
+        first_time = 0;
       }
       break;
     }
@@ -452,19 +452,19 @@ fputs(
     while (getline(&line, &len, stdin) != -1) {
       // If already did some output must close that previous line:
       if (first_time)
-	first_time = 0;
+        first_time = 0;
       else {
-	switch (mode) {
-	case RAW:
-	  break;
-	case JSON:
-	  fputc(',', stdout);
-	  /*FALL THROUGH*/
-	case CSV:
-	case JSONL:
-	  fputc('\n', stdout);
-	  break;
-	}
+        switch (mode) {
+        case RAW:
+          break;
+        case JSON:
+          fputc(',', stdout);
+          /*FALL THROUGH*/
+        case CSV:
+        case JSONL:
+          fputc('\n', stdout);
+          break;
+        }
       }
       get(line); // no , and/or \n output yet
       linenr++;
@@ -476,15 +476,15 @@ fputs(
       // Trailer:
       switch (mode) {
       case RAW:
-	break;
+        break;
       case JSON:
-	// no last comma!
-	fputs("\n]", stdout);
-	/*FALL THROUGH*/
+        // no last comma!
+        fputs("\n]", stdout);
+        /*FALL THROUGH*/
       case CSV:
       case JSONL:
-	fputc('\n', stdout);
-	break;
+        fputc('\n', stdout);
+        break;
       }
       first_time = 1;
     }

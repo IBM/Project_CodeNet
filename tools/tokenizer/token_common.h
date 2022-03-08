@@ -47,7 +47,7 @@ extern int nowarn/*= 0*/;            // when 1 warnings are suppressed
 extern Language source/*= C*/;       // language mode
 
 extern const char *is_keyword(const char *word,
-			      const char *table[], unsigned size);
+                              const char *table[], unsigned size);
 
 extern int get(void);
 extern void unget(int cc);

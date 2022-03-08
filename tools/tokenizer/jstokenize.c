@@ -108,20 +108,20 @@ static int tokenize(char *token, const char **type,
         // Skip till end-of-line (\n exclusive):
         while ((cc = get()) != EOF && cc != '\n' && cc != '\r')
           ;
-	// cc == '\n' || cc == '\r' || cc == EOF
-	if (cc == '\r') {
-	  if (!nowarn)
-	    fprintf(stderr,
-		    "(W): Unexpected continuation in line comment.\n");
-	  // Effectively ignore any \ and terminate logical line:
-	  cc == '\n';
-	}
+        // cc == '\n' || cc == '\r' || cc == EOF
+        if (cc == '\r') {
+          if (!nowarn)
+            fprintf(stderr,
+                    "(W): Unexpected continuation in line comment.\n");
+          // Effectively ignore any \ and terminate logical line:
+          cc == '\n';
+        }
         goto restart;
       }
 
       if (cc == '*') {
-	// Remember start position:
-	unsigned lin = linenr;
+        // Remember start position:
+        unsigned lin = linenr;
 
         // Skip till */ inclusive:
         int nc = get(); // if EOF next get will be EOF too
@@ -130,9 +130,9 @@ static int tokenize(char *token, const char **type,
           nc = get();
           if (nc == EOF) { // Error!
             fprintf(stderr,
-		    "(E): [%s:%u] Unexpected end-of-file in /* comment.\n",
-		    filename, lin);
-	    unexpect_eof++;
+                    "(E): [%s:%u] Unexpected end-of-file in /* comment.\n",
+                    filename, lin);
+            unexpect_eof++;
             return 0;
           }
         } while (cc != '*' || nc != '/');
@@ -153,13 +153,13 @@ static int tokenize(char *token, const char **type,
         // Skip till end-of-line (\n exclusive):
         while ((cc = get()) != EOF && cc != '\n' && cc != '\r')
           ;
-	if (cc == '\r') {
-	  if (!nowarn)
-	    fprintf(stderr,
-		    "(W): Unexpected continuation in hashbang comment.\n");
-	  // Effectively ignore any \ and terminate logical line:
-	  cc == '\n';
-	}
+        if (cc == '\r') {
+          if (!nowarn)
+            fprintf(stderr,
+                    "(W): Unexpected continuation in hashbang comment.\n");
+          // Effectively ignore any \ and terminate logical line:
+          cc == '\n';
+        }
         goto restart;
       }
       // seen # but not #!
@@ -201,37 +201,37 @@ static int tokenize(char *token, const char **type,
       int pc;
       do {
         token_add(cc);
-	pc = cc;
-	cc = get();
-	if (cc == '\r') {
-	  if (!nowarn)
-	    fprintf(stderr,
-		    "(W): Unexpected continuation in regex literal.\n");
-	  // Effectively ignore:
-	  cc = get();
-	}
-
-	if (cc == '\n') {
+        pc = cc;
+        cc = get();
+        if (cc == '\r') {
           if (!nowarn)
-	    fprintf(stderr,
-		    "(W): Unexpected newline in regular expression literal.\n");
-	  // discard:
-	  cc = get();	  
-	}
+            fprintf(stderr,
+                    "(W): Unexpected continuation in regex literal.\n");
+          // Effectively ignore:
+          cc = get();
+        }
 
-	if (cc == EOF) {
+        if (cc == '\n') {
           if (!nowarn)
-	    fprintf(stderr,
-		    "(W): Unexpected EOF in regular expression literal.\n");
+            fprintf(stderr,
+                    "(W): Unexpected newline in regular expression literal.\n");
+          // discard:
+          cc = get();     
+        }
+
+        if (cc == EOF) {
+          if (!nowarn)
+            fprintf(stderr,
+                    "(W): Unexpected EOF in regular expression literal.\n");
           unexpect_eof++;
-	  break;
-	}
+          break;
+        }
       } while (cc != '/' || pc == '\\');
       token_add(cc); // the /
       cc = get();
       while (strchr("gimsuy", cc)) {
         token_add(cc);
-	cc = get();
+        cc = get();
       }
       unget(cc);
       *type = "regex";
@@ -259,15 +259,15 @@ static int tokenize(char *token, const char **type,
       int nesting = 0; // keep track of ${} nesting
       do {
         token_add(cc);
-	// For template can have nesting inside placeholder ${...}
-	// FIXME: no check for nested paired ``; same for {}
-	if (qc == '`') {
-	  if (pc == '$' && cc == '{')
-	    nesting++;
-	  else
-	  if (cc == '}')
-	    nesting--;
-	}
+        // For template can have nesting inside placeholder ${...}
+        // FIXME: no check for nested paired ``; same for {}
+        if (qc == '`') {
+          if (pc == '$' && cc == '{')
+            nesting++;
+          else
+          if (cc == '}')
+            nesting--;
+        }
 
         // Assume \ is not escaped itself.
         if (pc != '\\' && cc == qc && !nesting) { // unescaped quote
@@ -283,16 +283,16 @@ static int tokenize(char *token, const char **type,
 
         if (cc == '\n' && qc != '`') { // Ok in template
           if (!nowarn)
-	    fprintf(stderr,
-		    "(W): Unexpected unescaped newline in string.\n");
+            fprintf(stderr,
+                    "(W): Unexpected unescaped newline in string.\n");
           // discard
           cc = get();
         }
 
         if (cc == EOF) {
           if (!nowarn)
-	    fprintf(stderr,
-		    "(W): Unexpected EOF in string/template.\n");
+            fprintf(stderr,
+                    "(W): Unexpected EOF in string/template.\n");
           unexpect_eof++;
           break;
         }
@@ -312,11 +312,11 @@ static int tokenize(char *token, const char **type,
       unget(cc);
       token[len] = '\0';
       if (is_keyword(token, keywords, num_keywords)) {
-	*type = "keyword";
-	regex_ok = !!is_keyword(token, regex_preceders, num_preceders);
+        *type = "keyword";
+        regex_ok = !!is_keyword(token, regex_preceders, num_preceders);
       }
       else
-	*type = "identifier";
+        *type = "identifier";
       break;
     }
 
@@ -340,16 +340,16 @@ static int tokenize(char *token, const char **type,
       } int_lit = DEC; // assume decimal number
 
       /* BIN: 0[bB][01](_?[01])*
-	 LEGACY_OCT: 0[0-7]+
-	 OCT: 0[oO][0-7](_?[0-7])*
-	 DEC: 0|[1-9](_?[0-9])*
-	 HEX: 0[xX][0-9a-fA-F](_?[0-9a-fA-F])*
+         LEGACY_OCT: 0[0-7]+
+         OCT: 0[oO][0-7](_?[0-7])*
+         DEC: 0|[1-9](_?[0-9])*
+         HEX: 0[xX][0-9a-fA-F](_?[0-9a-fA-F])*
 
-	 EXP: [eE][+-]?[0-9](_?[0-9])*
+         EXP: [eE][+-]?[0-9](_?[0-9])*
 
-	 FLOATING: .[0-9][_0-9]*EXP?
-	         | DEC.([0-9][_0-9]*)?EXP?
-	         | DEC EXP
+         FLOATING: .[0-9][_0-9]*EXP?
+                 | DEC.([0-9][_0-9]*)?EXP?
+                 | DEC EXP
        */
 
       if (cc == '0') {
@@ -368,14 +368,14 @@ static int tokenize(char *token, const char **type,
           int_lit = HEX;
           break;
         default:
-	  if ('0' <= nc && nc <= '7') {
-	    token_add(cc); // the 0
-	    int_lit = LEGACY_OCT;
-	  }
-	  else {
-	    unget(nc);
-	    nc = cc;
-	  }
+          if ('0' <= nc && nc <= '7') {
+            token_add(cc); // the 0
+            int_lit = LEGACY_OCT;
+          }
+          else {
+            unget(nc);
+            nc = cc;
+          }
           break;
         }
         cc = nc;
@@ -454,9 +454,9 @@ static int tokenize(char *token, const char **type,
       }
 
       if (cc == 'n') // BigInt
-	token_add(cc);
+        token_add(cc);
       else
-	unget(cc);
+        unget(cc);
 
       *type = "integer";
       break;
@@ -492,28 +492,28 @@ static int tokenize(char *token, const char **type,
       if (strchr("*+-<>&|?.=", cc) && c2 == cc) { // double or triple
         // ** ++ -- << >> && || ?? .. ==
 
-	// special case ++ and --
-	if (c2 == '+' || c2 == '-') {
+        // special case ++ and --
+        if (c2 == '+' || c2 == '-') {
             token_add(c2);
             *type = "operator";
             break;
-	}
+        }
 
         // ** << >> && || ?? .. ==
         int c3 = get();
 
-	// special case . and ...
+        // special case . and ...
         if (c2 == '.') {
           if (c3 == '.') {
             // ...
             token_add(c2);
             token_add(c3);
           }
-	  else {
-	    // ..x
-	    unget(c3);
-	    unget(c2);
-	  }
+          else {
+            // ..x
+            unget(c3);
+            unget(c2);
+          }
           // .
           *type = "operator";
           break;
@@ -530,18 +530,18 @@ static int tokenize(char *token, const char **type,
 
         // ** << >> && || ?? ==
 
-	if (c2 == '>' && c3 == c2) {
-	  // >>>
-	  int c4 = get();
+        if (c2 == '>' && c3 == c2) {
+          // >>>
+          int c4 = get();
           token_add(c3);
-	  if (c4 == '=')
-	    // >>>=
-	    token_add(c4);
-	  else
-	    unget(c4);
-	}
-	else
-	  unget(c3);
+          if (c4 == '=')
+            // >>>=
+            token_add(c4);
+          else
+            unget(c4);
+        }
+        else
+          unget(c3);
 
         // ** << >> && || ?? ==
         *type = "operator";
@@ -552,7 +552,7 @@ static int tokenize(char *token, const char **type,
       // also missing => ?. !== <= >= == != += -= *= %= &= |= ^= /=
 
       if (cc == '?' && c2 == '.' ||
-	  cc == '=' && c2 == '>') {
+          cc == '=' && c2 == '>') {
         // ?. =>
         token_add(c2);
         *type = "operator";
@@ -562,20 +562,20 @@ static int tokenize(char *token, const char **type,
       // still missing !== <= >= == != += -= *= %= &= |= ^= /=
 
       if (c2 == '=') {
-	// <= >= == != += -= *= %= &= |= ^= /=
-	token_add(c2);
-	if (cc == '!') {
-	  // !=
-	  int c3 = get();
-	  if (c3 == '=')
-	    // !==
-	    token_add(c3);
-	  else
-	    unget(c3);
-	}
+        // <= >= == != += -= *= %= &= |= ^= /=
+        token_add(c2);
+        if (cc == '!') {
+          // !=
+          int c3 = get();
+          if (c3 == '=')
+            // !==
+            token_add(c3);
+          else
+            unget(c3);
+        }
       }
       else
-	unget(c2);
+        unget(c2);
       *type = "operator";
       break;
     }
@@ -711,7 +711,7 @@ int main(int argc, char *argv[])
 fputs(
 "A tokenizer for JavaScript source code with output in 6 formats.\n"
 "Recognizes the following token classes: keyword, identifier, integer,\n"
-"floating, string, regex, and operator.\n\n", stdout);
+"floating, string, regex, and operator.\n\n", stderr);
 fprintf(stderr, usage_str, basename(argv[0]));
 fputs(
 "\nCommand line options are:\n"

@@ -1,0 +1,73 @@
+# XML RNC schema for tokML 1.0
+# Copyright IBM Corporation 2021
+# Prepared by Geert Janssen <geert@us.ibm.com>
+
+datatypes xsd = 'http://www.w3.org/2001/XMLSchema-datatypes'
+
+#default namespace = "https://www.ibm.com/tokml"
+
+start = source
+
+# Children are token elements interspersed with white-space.
+source = element source {
+   attribute language { "C" | "C++" | "Java" },
+   attribute filename { xsd:string }?,
+   (  line_comment |
+      block_comment |
+      keyword |
+      identifier |
+      integer |
+      floating |
+      \string |
+      character |
+      operator |
+      preprocessor |
+      text )*
+}
+
+# Attributes common to all token elements.
+common-attrs = 
+   (  attribute line { xsd:unsignedInt },
+      attribute col { xsd:unsignedInt },
+      attribute len { xsd:unsignedInt } )
+
+line_comment = element line_comment {
+   common-attrs,
+   text
+}
+block_comment = element block_comment {
+   common-attrs,
+   text
+}
+keyword = element keyword {
+   common-attrs,
+   text
+}
+identifier = element identifier {
+   common-attrs,
+   text
+}
+integer = element integer {
+   common-attrs,
+   text
+}
+floating = element floating {
+   common-attrs,
+   text
+}
+\string = element string {
+   common-attrs,
+   text
+}
+character = element character {
+   common-attrs,
+   text
+}
+operator = element operator {
+   common-attrs,
+   text
+}
+preprocessor = element preprocessor {
+   common-attrs,
+   text
+}
