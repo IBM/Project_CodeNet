@@ -68,7 +68,7 @@ https://dax-cdn.cdn.appdomain.cloud/dax-project-codenet/1.0.0/Project_CodeNet.ta
 ## Download the dataset
 
 Download the full dataset in our [data repository]
-(https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/).
+(https://developer.ibm.com/data/project-codenet/).
 
 `tar -zxf Project_CodeNet_full.tar.gz`
 to uncompress and untar. The directory structure and how the code samples are organized are explained [here](README.md#directory-structure-and-naming-convention).
