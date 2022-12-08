@@ -48,7 +48,7 @@ In light of these issues, we have extracted several benchmark datasets from Code
 
 ### Potential use cases
 
-The rich metadata and diversity open Project CodeNet to a plethora of uses cases. The problem-submission relationship in Project CodeNet corresponds to type-4 similarity and can be used for code search and clone detection. The code samples in Project CodeNet are labeled with their acceptance status and we can explore AI techniques to distinguish correct codes from problematic ones. Project CodeNet's metadata also enables the tracking of how a submission evolves from problematic to accepted, which could be used for exploring automatic code correction. Each code sample is labeled with CPU run time and  memory footprint, which can be used for regression studies and prediction. Given  its wealth of programs written in a multitude of languages, Project CodeNet may serve as a valuable benchmark dataset for source-to-source translation.
+The rich metadata and diversity open Project CodeNet to a plethora of uses cases. The problem-submission relationship in Project CodeNet corresponds to [type-4 similarity](https://escholarship.org/uc/item/45r2308g) and can be used for code search and clone detection. The code samples in Project CodeNet are labeled with their acceptance status and we can explore AI techniques to distinguish correct codes from problematic ones. Project CodeNet's metadata also enables the tracking of how a submission evolves from problematic to accepted, which could be used for exploring automatic code correction. Each code sample is labeled with CPU run time and  memory footprint, which can be used for regression studies and prediction. Given  its wealth of programs written in a multitude of languages, Project CodeNet may serve as a valuable benchmark dataset for source-to-source translation.
 
 ### Usability
 
@@ -67,7 +67,7 @@ https://dax-cdn.cdn.appdomain.cloud/dax-project-codenet/1.0.0/Project_CodeNet.ta
 
 ## Download the dataset
 
-Download the full dataset in our [data repository](https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/).
+Download the full dataset in our [data repository](https://developer.ibm.com/data/project-codenet/).
 
 `tar -zxf Project_CodeNet_full.tar.gz`
 to uncompress and untar. The directory structure and how the code samples are organized are explained [here](README.md#directory-structure-and-naming-convention).
@@ -75,10 +75,10 @@ to uncompress and untar. The directory structure and how the code samples are or
 The 4 benchmark datasets, Project_CodeNet_C++1000, Project_CodeNet_C++1400,
 Project_CodeNet_Python800, and Project_CodeNet_Java250 are included in the
 full dataset and are available separately in the "Archive Dataset File" column of the table in the "Get this Dataset" 
-section in our [data repository](https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/). 
+section in our [data repository](https://developer.ibm.com/exchanges/data/all/project-codenet/). 
 They can be used for code classification and code similarity research as a replacement of or in addition to the dataset [POJ-104](https://sites.google.com/site/treebasedcnn/).
 
-To expedite AI for code research using graph neural networks, we have included the simplified parse tree (SPT) representation of the code samples for each benchmark dataset. They are available in the "Archive SPT File" column of the table in the "Get this Dataset" section in our [data repository](https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/).
+To expedite AI for code research using graph neural networks, we have included the simplified parse tree (SPT) representation of the code samples for each benchmark dataset. They are available in the "Archive SPT File" column of the table in the "Get this Dataset" section in our [data repository](https://developer.ibm.com/exchanges/data/all/project-codenet/).
 
 ## Dataset overview
 
