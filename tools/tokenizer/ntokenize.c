@@ -56,62 +56,62 @@
 #define ws_RE           "[ \t\v\f\n]*"
 
 // 96 chars (omitted are e.g.: @ $ `)
-//                                     3  5  67         8         9       9
-//                        1234 5 6 7   3  9  9012345678901234567890123 4 56
-#define basic_char0_RE	"[][ \t\v\f\na-zA-Z0-9_{}#()<>%:;.?*+/^&|~!=,\\\"'-]"
+//                                     33 56 67         8         9       9
+//                        1234 5 6 7 8 34 90 9012345678901234567890123 4 56
+#define basic_char0_RE  "[][ \t\v\f\na-zA-Z0-9_{}#()<>%:;.?*+/^&|~!=,\\\"'-]"
 
 // all basic chars except \n and >
-#define h_chars_RE	"[][ \t\v\fa-zA-Z0-9_{}#()<%:;.?*+/^&|~!=,\\\"'-]+"
+#define h_chars_RE      "[][ \t\v\fa-zA-Z0-9_{}#()<%:;.?*+/^&|~!=,\\\"'-]+"
 // all basic chars except \n and \"
-#define q_chars_RE	"[][ \t\v\fa-zA-Z0-9_{}#()<>%:;.?*+/^&|~!=,\\'-]+"
-#define header_RE	"<"h_chars_RE">|\""q_chars_RE"\""
-#define pp_number_RE	"\\.?[0-9]('?[a-zA-Z_0-9]|[eE][+-]|\\.)*"
+#define q_chars_RE      "[][ \t\v\fa-zA-Z0-9_{}#()<>%:;.?*+/^&|~!=,\\'-]+"
+#define header_RE       "<"h_chars_RE">|\""q_chars_RE"\""
+#define pp_number_RE    "\\.?[0-9]('?[a-zA-Z_0-9]|[eE][+-]|\\.)*"
 
-#define unichar_RE	"\\\\u[0-9a-fA-F]{4}|\\\\U[0-9a-fA-F]{8}"
+#define unichar_RE      "\\\\u[0-9a-fA-F]{4}|\\\\U[0-9a-fA-F]{8}"
 
-//#define identifier_RE	"[_a-zA-Z][_a-zA-Z0-9]*"
-#define identifier_RE	"([_a-zA-Z]|"unichar_RE")([_a-zA-Z0-9]|"unichar_RE")*"
+//#define identifier_RE "[_a-zA-Z][_a-zA-Z0-9]*"
+#define identifier_RE   "([_a-zA-Z]|"unichar_RE")([_a-zA-Z0-9]|"unichar_RE")*"
 
-#define suffix_RE	"([uU]ll?|[uU]LL?|ll?[uU]?|LL?[uU]?)?"
-#define binary_RE	"0[bB][01]('?[01])*"suffix_RE
-#define octal_RE	"0('?[0-7])*"suffix_RE
-#define decimal_RE	"[1-9]('?[0-9])*"suffix_RE
-#define hexadecimal_RE	"0[xX][0-9a-fA-F]('?[0-9a-fA-F])*"suffix_RE
-#define integer_RE	binary_RE"|"octal_RE"|"decimal_RE"|"hexadecimal_RE
+#define suffix_RE       "([uU]ll?|[uU]LL?|ll?[uU]?|LL?[uU]?)?"
+#define binary_RE       "0[bB][01]('?[01])*"suffix_RE
+#define octal_RE        "0('?[0-7])*"suffix_RE
+#define decimal_RE      "[1-9]('?[0-9])*"suffix_RE
+#define hexadecimal_RE  "0[xX][0-9a-fA-F]('?[0-9a-fA-F])*"suffix_RE
+#define integer_RE      binary_RE"|"octal_RE"|"decimal_RE"|"hexadecimal_RE
 
-#define dec_part_RE	"[0-9]('?[0-9])*"
-#define exponent_RE	"[eE][-+]?[0-9]('?[0-9])*"
-#define floating_RE	"(\\."dec_part_RE"("exponent_RE")?|"\
-	                dec_part_RE"\\.("dec_part_RE")?("exponent_RE")?|"\
-        	        dec_part_RE exponent_RE")[fFlL]?"
+#define dec_part_RE     "[0-9]('?[0-9])*"
+#define exponent_RE     "[eE][-+]?[0-9]('?[0-9])*"
+#define floating_RE     "(\\."dec_part_RE"("exponent_RE")?|"\
+                        dec_part_RE"\\.("dec_part_RE")?("exponent_RE")?|"\
+                        dec_part_RE exponent_RE")[fFlL]?"
 
-#define oct_char_RE	"\\\\[0-7]{1,3}"
-#define hex_char_RE	"\\\\x[0-9a-fA-F]+"
-#define escape_RE	"\\\\['\"?abfnrtv\\]|"oct_char_RE"|"hex_char_RE
-#define character_RE	"[uUL]?'([^'\\\n]|"escape_RE"|"unichar_RE")'"
-#define string_RE	"[uUL]?\"([^\"\\\n]|"escape_RE"|"unichar_RE")*\""
+#define oct_char_RE     "\\\\[0-7]{1,3}"
+#define hex_char_RE     "\\\\x[0-9a-fA-F]+"
+#define escape_RE       "\\\\['\"?abfnrtv\\]|"oct_char_RE"|"hex_char_RE
+#define character_RE    "[uUL]?'([^'\\\n]|"escape_RE"|"unichar_RE")'"
+#define string_RE       "[uUL]?\"([^\"\\\n]|"escape_RE"|"unichar_RE")*\""
 
 // should really be: any basic source char except ) followed by delimiter
-#define r_chars_RE	"[^)]*"
+#define r_chars_RE      "[^)]*"
 // delimiter; first and second occurrence in rawstring must be the same
 // use back reference \3:
-#define d_chars_RE	"([^ ()\\\t\v\f\n]{0,16})"
-#define rawstring_RE	"[uUL]?R\""d_chars_RE"\\("r_chars_RE"\\)\\3\""
+#define d_chars_RE      "([^ ()\\\t\v\f\n]{0,16})"
+#define rawstring_RE    "[uUL]?R\""d_chars_RE"\\("r_chars_RE"\\)\\3\""
 
-#define operator_RE	"[][{}();?~,]|<=>|<<=|\\.\\.\\.|->\\*|>>=|"\
-  			"[*/!=^]=?|<[:%=<]?|:[:>]?|\\.[*]?|-[->=]?|\\+[=+]?|"\
-			"%[>=]?|&[=&]?|>[>=]?|\\|[|=]?"
+#define operator_RE     "[][{}();?~,]|<=>|<<=|\\.\\.\\.|->\\*|>>=|"\
+                        "[*/!=^]=?|<[:%=<]?|:[:>]?|\\.[*]?|-[->=]?|\\+[=+]?|"\
+                        "%[>=]?|&[=&]?|>[>=]?|\\|[|=]?"
 
 #define preprocessor_RE "##?"
 
-#define token_RE	"^"ws_RE"(("rawstring_RE")|("identifier_RE")|("\
+#define token_RE        "^"ws_RE"(("rawstring_RE")|("identifier_RE")|("\
                         integer_RE")|("floating_RE")|("string_RE")|("\
                         character_RE")|("operator_RE")|("preprocessor_RE"))"
 
 #define NMATCH 34
 
 // Guarded against overflow but not full-proof!
-#define MAX_LINE 4096	// maximum logical line length in chars (\0 exclusive)
+#define MAX_LINE 4096   // maximum logical line length in chars (\0 exclusive)
 
 #define utf8_start(cc)          (((cc)&0xC0)!=0x80)
 
@@ -204,7 +204,7 @@ unsigned get_token(char const *text, unsigned start)
   if (regexec(re, text, nmatch, pmatch, REG_NOTEOL) == REG_NOMATCH) {
     // Warn about the failed match:
     fprintf(stderr, "(W) [%u:%u] not a valid token; skipped.\n",
-	    linenrs[start],columns[start]);
+            linenrs[start],columns[start]);
     // Cannot recover; no more input.
     return 0;
   }
@@ -239,7 +239,6 @@ unsigned get_token(char const *text, unsigned start)
 int normalize_newline(void)
 {
   int cc = getchar();
-  if (cc == EOF || cc == '\n') return cc;
 
   if (cc == '\r') {
     // Maybe \r \n (CR NL) combination?
@@ -248,10 +247,10 @@ int normalize_newline(void)
       char_count++; // counts the carriage return
       utf8_count++;
       // No use incrementing column.
-      return nc; // effectively skip the \r
+      return nc; // return \n; effectively skipping the \r
     }
-    // Mind nc not \n.
-    if (nc != EOF) ungetc(nc, stdin);
+    // Mind nc not \n. ungetc(EOF) is Okay.
+    ungetc(nc, stdin);
     // cc == '\r'; consider a newline as well, so turn into \n:
     cc = '\n';
   }
@@ -266,15 +265,15 @@ int get(void)
   int cc;
  restart:
   // Read a fresh char:
-  cc = normalize_newline();
+  cc = normalize_newline(); // cc != '\r'
   if (cc == EOF) return EOF;
   char_count++;
   if (utf8_start(cc)) utf8_count++;
 
-  if (cc == '\n') {
+  if (cc == '\n') { // a normalized end-of-line (\r|\r?\n)
     linenr++;
     column = 0;
-    return cc;
+    return cc; // \n here signals a logical end-of-line
   }
 
   // Deal with \ line continuations!
@@ -291,8 +290,8 @@ int get(void)
       // Could again start a line continuation!
       goto restart;
     }
-    // Mind nc not \n.
-    if (nc != EOF) ungetc(nc, stdin);
+    // Mind nc not \n. ungetc(EOF) is Okay.
+    ungetc(nc, stdin);
     // cc == '\\' a regular backslash
   }
   column++;
@@ -397,22 +396,22 @@ int buffer_fill(void)
     if (cc == '"') {
       // Switch to unfiltered input till unescaped closing ":
       if ((cc = get()) == '"') {
-	buffer_add(cc);
-	// An empty string literal.
-	continue;
+        buffer_add(cc);
+        // An empty string literal.
+        continue;
       }
       if (cc == EOF || cc == '\n')
-	// unexpected EOF or newline in string
-	break;
+        // unexpected EOF or newline in string
+        break;
       buffer_add(cc);
       int pc;
       do {
-	pc = cc;
-	cc = get();
-	if (cc == EOF || cc == '\n')
-	  // unexpected EOF or newline in string
-	  goto break_outer;
-	buffer_add(cc);
+        pc = cc;
+        cc = get();
+        if (cc == EOF || cc == '\n')
+          // unexpected EOF or newline in string
+          goto break_outer;
+        buffer_add(cc);
       } while (pc == '\\' || cc != '"');
       // pc != '\\' && cc == '"'
     }
