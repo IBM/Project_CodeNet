@@ -58,6 +58,11 @@ To facilitate creation of customized benchmarks and dataset, we provide a set of
 
 We have performed numerous experiments on the CodeNet dataset. The goal of these experiments is to produce a set of baseline models and results for users of the CodeNet dataset to gauge their research. The run scripts and training scripts are available in the model-experiments directory. The classification and similarity experiments use the benchmark datasets we extracted from CodeNet as training and test datasets. In addition to experiments based on token sequences, we also have experiments leveraging graph neural networks (GNN). For the convenience of the users interested in GNN's, we have included the simplified parse tree (SPT) representation of the code samples for each benchmark dataset. The experiment on Masked Language Model has a companion Jupyter notebook in the notebooks directory.
 
+## Problem Descriptions
+
+For the vast majority of problem classes, short problem descriptions are available in
+'doc/problem_descriptions.tar.gz', a small html file for each problem. 
+
 ## Relevant links
 
 - [Project CodeNet full dataset: Project_CodeNet.tar.gz](
