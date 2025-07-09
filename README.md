@@ -66,10 +66,12 @@ For the vast majority of problem classes, short problem descriptions are availab
 ## Relevant links
 
 ```diff
-- **DATASET UNAVAILABLE AT THIS MOMENT!**
+- DATASET UNAVAILABLE AT THIS MOMENT!
 ```
 We are working on making the full dataset available again soon.
-The links below unfortunately no longer work.
+All links below that refer to `dax-cdn.cdn.appdomain.cloud` are no
+longer working. The paper on Arxiv however is of course still
+accessible. 
 
 - [Project CodeNet full dataset: Project_CodeNet.tar.gz](
 https://dax-cdn.cdn.appdomain.cloud/dax-project-codenet/1.0.0/Project_CodeNet.tar.gz)
