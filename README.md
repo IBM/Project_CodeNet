@@ -65,8 +65,9 @@ For the vast majority of problem classes, short problem descriptions are availab
 
 ## Relevant links
 
-![#f03c15](**DATASET UNAVAILABLE AT THIS MOMENT!**)
-
+```diff
+- **DATASET UNAVAILABLE AT THIS MOMENT!**
+```
 We are working on making the full dataset available again soon.
 The links below unfortunately no longer work.
 
