@@ -72,7 +72,7 @@ It does however form part of the full dataset listed above.
 
 ## Download the dataset
 
-Download the full dataset in our [data repository](https://developer.ibm.com/data/project-codenet/).
+Download the full dataset from the link listed above, then use
 
 `tar -zxf Project_CodeNet_full.tar.gz`
 to uncompress and untar. The directory structure and how the code samples are organized are explained [here](README.md#directory-structure-and-naming-convention).
