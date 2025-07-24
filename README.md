@@ -79,8 +79,7 @@ to uncompress and untar. The directory structure and how the code samples are or
 
 The 4 benchmark datasets, Project_CodeNet_C++1000, Project_CodeNet_C++1400,
 Project_CodeNet_Python800, and Project_CodeNet_Java250 are included in the
-full dataset and are available separately in the "Archive Dataset File" column of the table in the "Get this Dataset" 
-section in our [data repository](https://developer.ibm.com/exchanges/data/all/project-codenet/). 
+full dataset.
 They can be used for code classification and code similarity research as a replacement of or in addition to the dataset [POJ-104](https://sites.google.com/site/treebasedcnn/).
 
 To expedite AI for code research using graph neural networks, we have included the simplified parse tree (SPT) representation of the code samples for each benchmark dataset. They are available in the "Archive SPT File" column of the table in the "Get this Dataset" section in our [data repository](https://developer.ibm.com/exchanges/data/all/project-codenet/).
