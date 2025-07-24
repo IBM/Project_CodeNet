@@ -82,8 +82,6 @@ Project_CodeNet_Python800, and Project_CodeNet_Java250 are included in the
 full dataset.
 They can be used for code classification and code similarity research as a replacement of or in addition to the dataset [POJ-104](https://sites.google.com/site/treebasedcnn/).
 
-To expedite AI for code research using graph neural networks, we have included the simplified parse tree (SPT) representation of the code samples for each benchmark dataset. They are available in the "Archive SPT File" column of the table in the "Get this Dataset" section in our [data repository](https://developer.ibm.com/exchanges/data/all/project-codenet/).
-
 ## Dataset overview
 
 The Project CodeNet Dataset consists of a very large collection of source files, extensive metadata, tooling to access the dataset and make tailored selections, and documentation.
