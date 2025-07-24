@@ -74,7 +74,7 @@ It does however form part of the full dataset listed above.
 
 Download the full dataset from the link listed above, then use
 
-`tar -zxf Project_CodeNet_full.tar.gz`
+`tar -zxf Project_CodeNet.tar.gz`
 to uncompress and untar. The directory structure and how the code samples are organized are explained [here](README.md#directory-structure-and-naming-convention).
 
 The 4 benchmark datasets, Project_CodeNet_C++1000, Project_CodeNet_C++1400,
