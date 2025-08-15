@@ -65,8 +65,8 @@ For the vast majority of problem classes, short problem descriptions are availab
 
 ## Relevant links
 
-- [Project CodeNet full dataset: Project_CodeNet.tar.gz](https://codait-cos-dax.s3.us.cloud-object-storage.appdomain.cloud/dax-project-codenet/1.0.0/Project_CodeNet.tar.gz)
-- [Project CodeNet metadata: Project_CodeNet_metadata.tar.gz](https://dax-cdn.cdn.appdomain.cloud/dax-project-codenet/1.0.0/Project_CodeNet_metadata.tar.gz). Unfortunately this dataset is no longer available as a separate tar file;
+- [Project CodeNet full dataset: Project_CodeNet.tar.gz](https://codait-cos-dax.s3.us.cloud-object-storage.appdomain.cloud/dax-project-codenet/1.0.0/Project_CodeNet.tar.gz) (7.8GB)
+- Project CodeNet metadata: Project_CodeNet_metadata.tar.gz. Unfortunately this dataset is no longer available as a separate tar file;
 It does however form part of the full dataset listed above.
 - [Project CodeNet paper: Arxiv paper](https://arxiv.org/abs/2105.12655)
 
