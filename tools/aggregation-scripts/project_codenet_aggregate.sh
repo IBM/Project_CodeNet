@@ -60,7 +60,7 @@ case $i in
     echo "and populate it with symbolic links from CodeNet data."
     echo "Options allow to restict the number of samples, both per problem"
     echo "as well as an overall amount."
-    echo "See also: codenet_submissions.sh."
+    echo "See also: project_codenet_submissions.sh."
     exit 2
     ;;
     -c=*|--config=*)
@@ -192,7 +192,7 @@ while [ -d "${PROBLEM_DIR}" ]; do
 		    [ "${NUM_OVERALL_SAMPLES}" ] && \
   		    [ "${OVERALL_SAMPLES}" -ge "${NUM_OVERALL_SAMPLES}" ] &&\
 		    { ENOUGH=1; break; }
-		done < <(${SCRIPT_DIR}/codenet_submissions.sh \
+		done < <(${SCRIPT_DIR}/project_codenet_submissions.sh \
 				      ${SUBMISSION_ARGS} \
 				      "${problem}" "${lang}" "${status}" \
 				      "${MIN_CODE_SIZE}" "${MAX_CODE_SIZE}")
