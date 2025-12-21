@@ -20,7 +20,7 @@ srcML will figure out by itself how to process the snippet.
 The programming languages supported by srcML are: C, C++, C#,
 and Java. Each language has its own unique XML elements together with a common
 shared set for similar language constructs.
-This is documented [here](https://www.srcml.org/doc/srcMLGrammar.html).
+This is documented [here](https://www.srcml.org/doc/srcMLElements.html).
 
 ### Example
 
