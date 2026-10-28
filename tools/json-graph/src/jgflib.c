@@ -206,7 +206,7 @@ static size_t read_input(void)
     nread++;
   }
   /* No need for terminating \0 char. */
-  if (debug) fprintf(stderr, "(D): Read %u bytes.\n", nread);
+  if (debug) fprintf(stderr, "(D): Read %zu bytes.\n", nread);
   return nread;
 }
 
