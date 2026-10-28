@@ -685,7 +685,7 @@ fputs(
   //if (line) free(line);
 
   if (verbose)
-    fprintf(stderr, "(I): Total distinct tokens in vocabulary: %u\n",
+    fprintf(stderr, "(I): Total distinct tokens in vocabulary: %zu\n",
 	    vocabulary.size());
 
   check_samples();

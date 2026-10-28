@@ -302,7 +302,7 @@ fputs(
       if (start_token) {
         fprintf(stdout,
                 "{ \"line\": 0, \"column\": 0, "
-                "\"class\": \"filename\", \"length\": %d, \"token\": \"%s\" }",
+                "\"class\": \"filename\", \"length\": %zu, \"token\": \"%s\" }",
                 strlen(filename), filename);
         first_time = 0;
       }
@@ -315,7 +315,7 @@ fputs(
       }
       if (start_token) {
         fprintf(stdout,
-                "<token line='0' column='0' class='filename' length='%d'>",
+                "<token line='0' column='0' class='filename' length='%zu'>",
                 strlen(filename));
         XML_escape(stdout, filename);
         fputs("</token>\n", stdout);
