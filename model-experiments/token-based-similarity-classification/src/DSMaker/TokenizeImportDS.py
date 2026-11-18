@@ -182,7 +182,7 @@ class ImportDsTokenizer(BaseDsTokenizer):
                 except KeyError:
                     self.valid_problems[_n_tokenized_sols] = [_problem]
             else:
-                os.system(f"rm {_output_fn}")
+                os.remove(_output_fn)
                 print(f"Problem {_problem} with solutions in {_solution_dir} " + 
                       "has no tokenized solutions")
         self.tok_debugger.endDebug()

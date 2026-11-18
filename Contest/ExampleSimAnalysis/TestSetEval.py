@@ -23,6 +23,7 @@ Program arguments are described at the end of the file
 """
 import sys
 import os
+import subprocess
 import argparse
 import csv
 import numpy as np
@@ -79,10 +80,11 @@ def tokenizeFile(filename, tokenizer):
     #Name of temporary file for tokenized source code
     TMP_TOKENIZATION = "./t_o_k_e_n_s.o_u_t"
     #Tokenization command ignoring macros
-    #tokenize_cmd = tokenizer + " -wcmcsv"
+    #tokenize_cmd = [tokenizer, "-wcmcsv"]
     #Tokenization command tokenising macros
-    tokenize_cmd = tokenizer + " -wmcsv"
-    if os.system(f"{tokenize_cmd}  -o {TMP_TOKENIZATION} {filename}"):
+    tokenize_cmd = [tokenizer, "-wmcsv"]
+    if subprocess.run(tokenize_cmd +
+                      ["-o", TMP_TOKENIZATION, "--", filename]).returncode:
         sys.exit(f"Tokenization error in file {filename}")
     tokens = []
     with open(TMP_TOKENIZATION, newline='',
