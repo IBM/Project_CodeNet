@@ -19,6 +19,7 @@ Module for updating dataset with tokenized solutions of given problems.
 """
 import sys
 import os
+import subprocess
 from os import path
 from abc import ABC, abstractmethod
 import json
@@ -58,17 +59,17 @@ class BaseTokenizer(ABC):
                        either C++ or Java
         - verbose   -- flag to pring tonezer warnings
         - no_macro  -- flag to ignor macro definitions in C C++ code
-        Returns: tokenization commend as a string
+        Returns: tokenization command as a list of arguments
         """
         _w = "" if verbose else "w"
         if language == "python":
-            return f"pytokenize -{_w}mcsv "
+            return ["pytokenize", f"-{_w}mcsv"]
         try:
             _l = self.LANG_FLAGS[language]
         except KeyError:
             sys.exit(f"Programming language {language} cannot be tokenized")    
         _c = "c" if no_macro else ""
-        return f"tokenize -{_w}{_c}{_l}mcsv "
+        return ["tokenize", f"-{_w}{_c}{_l}mcsv"]
         
     @abstractmethod
     def tokenizeFile(self, in_fn):
@@ -112,12 +113,10 @@ class TokClass17Tokenizer(BaseTokenizer):
 
     def makeFilterCmd(self):
         """
-        Make command for tokenizing source code
-        Returns: string as for command pipe with awk filter 
-                 postprocessing output of tokenizer
+        Make command for postprocessing output of tokenizer
+        Returns: awk filter command as a list of arguments
         """
-        return f"| filter.awk > {self.TMP_TOKENIZATION};" + \
-            "exit ${PIPESTATUS[0]}"
+        return ["filter.awk"]
 
     def tokenizeFile(self, in_fn):
         """
@@ -128,8 +127,16 @@ class TokClass17Tokenizer(BaseTokenizer):
        - either string of tokens if tokenization is successful
        - or None if it failed
         """
-        _rc =  os.system(self.tokenize_cmd + in_fn + 
-                         self.filter_cmd)
+        #Pipe tokenizer output through the filter into the temporary
+        #file; only the exit status of the tokenizer is checked
+        with open(self.TMP_TOKENIZATION, 'w') as _out:
+            _tok = subprocess.Popen(self.tokenize_cmd + ["--", in_fn],
+                                    stdout=subprocess.PIPE)
+            _filter = subprocess.Popen(self.filter_cmd,
+                                       stdin=_tok.stdout, stdout=_out)
+            _tok.stdout.close()
+            _filter.wait()
+            _rc = _tok.wait()
         if _rc: return None
         with open(self.TMP_TOKENIZATION) as _f:
             _tokens = _f.read().rstrip('\n').replace('\n',',')
@@ -163,7 +170,7 @@ class DetailedTokenizer(BaseTokenizer):
         """
         super(DetailedTokenizer, self).__init__(
             lang, verbose, no_macro)
-        self.tokenize_cmd += f" -o{self.TMP_TOKENIZATION} "
+        self.tokenize_cmd += [f"-o{self.TMP_TOKENIZATION}"]
         self.token_dict, self.n_tokens = \
             TokenDictFactory.makeTokenDict(token_set)
         #Set of unrecognized operators and keywords
@@ -181,7 +188,7 @@ class DetailedTokenizer(BaseTokenizer):
         - either string of tokens if tokenization is successful
         - or None if it failed
         """
-        if os.system(self.tokenize_cmd + in_fn):
+        if subprocess.run(self.tokenize_cmd + ["--", in_fn]).returncode:
             return None
         self.tok_debugger.debugFile(in_fn, 
                                     self.TMP_TOKENIZATION)
@@ -517,7 +524,7 @@ class DsTokenizer(BaseDsTokenizer):
                     try:
                         self.sol_len_distr[_n_tok][0] += 1
                     except KeyError:
-                        self.sol_len_distr[_n_tok] = [1, file2tokenize]
+                        self.sol_len_distr[_n_tok] = [1, _file2tokenize]
                 elif _tokens is None:
                     _failed.append(_file2tokenize)
                 else:
@@ -586,7 +593,7 @@ class DsTokenizer(BaseDsTokenizer):
                 except KeyError:
                     self.valid_problems[_n_tokenized_sols] = [_problem]
             else:
-                os.system(f"rm {_output_fn}")
+                os.remove(_output_fn)
                 print(f"Problem {_problem} with solutions in {_solution_dir} " + 
                       "has no tokenized solutions")
         self.tok_debugger.endDebug()
